@@ -6,6 +6,14 @@
 <title>Nepali Converter — All-in-One Toolkit</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
+  /* ===== PREETI FONT (loaded via jsDelivr CDN) ===== */
+  @font-face {
+    font-family: 'Preeti';
+    src: url('https://cdn.jsdelivr.net/gh/mhnpd/nepali-font@master/fonts/Preeti.TTF') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
   :root {
     --red: #C0392B;
     --red-light: #E74C3C;
@@ -634,6 +642,287 @@
   .sug-tag-en { color: #666; }
   .suggestion-item .eng { font-size: 11px; color: var(--text-muted); font-family: monospace; }
 
+  /* ===== PREETI CONVERTER ===== */
+  /* Mode tab headers – large bold box style */
+  .preeti-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .preeti-mode-tabs { display: flex; gap: 10px; }
+  .preeti-mode-tab {
+    padding: 9px 22px;
+    border: 2.5px solid #c7cdd6;
+    border-radius: 7px;
+    background: #fff;
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 800;
+    color: #6b7280;
+    cursor: pointer;
+    transition: border-color .15s, color .15s;
+    white-space: nowrap;
+  }
+  .preeti-mode-tab.active { border-color: #1e3a6e; color: #1e3a6e; }
+  .preeti-mode-tab:not(.active):hover { border-color: #9ca3af; color: #374151; }
+  /* Download button – top right bordered box */
+  .preeti-dl-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #fff;
+    border: 2px solid #c7cdd6;
+    border-radius: 9px;
+    padding: 7px 20px;
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: border-color .13s, box-shadow .13s;
+    white-space: nowrap;
+  }
+  .preeti-dl-btn:hover { border-color: #93c5fd; box-shadow: 0 2px 8px rgba(37,99,235,.13); }
+  .preeti-dl-top { font-size: 13px; font-weight: 800; color: #111827; }
+  .preeti-dl-sub  { font-size: 11px; color: #6b7280; margin-top: 1px; }
+  /* Subtitle */
+  .preeti-subtitle { font-size: 13px; color: #6b7280; margin: 0 0 10px; }
+  /* Compact offline banner */
+  .preeti-offline-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(90deg, #1e3a6e, #1e40af);
+    border-radius: 9px;
+    padding: 8px 14px;
+    margin-bottom: 12px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .preeti-offline-text { font-size: 12px; color: #dde8ff; line-height: 1.45; }
+  .preeti-offline-text strong { color: #fff; }
+  .preeti-view-plans {
+    background: rgba(255,255,255,.15);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,.32);
+    border-radius: 6px;
+    padding: 5px 13px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: var(--font-body);
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background .12s;
+  }
+  .preeti-view-plans:hover { background: rgba(255,255,255,.28); }
+  /* Two-panel wrapper */
+  .preeti-panel-wrap {
+    display: flex;
+    background: #fff;
+    border: 1.5px solid #d1d5db;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,.07);
+  }
+  .preeti-panel { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .preeti-panel:first-child { border-right: 1.5px solid #d1d5db; }
+  .preeti-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    border-bottom: 1.5px solid #d1d5db;
+    background: #fafafa;
+    flex-shrink: 0;
+  }
+  .preeti-panel-title { font-size: 14px; font-weight: 700; color: #111827; }
+  .preeti-hdr-btn {
+    background: #fff;
+    border: 1.5px solid #d1d5db;
+    border-radius: 6px;
+    padding: 3px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #374151;
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: background .12s;
+  }
+  .preeti-hdr-btn:hover { background: #f3f4f6; }
+  .preeti-hdr-copy { background: #2563eb; color: #fff; border-color: #2563eb; }
+  .preeti-hdr-copy:hover { background: #1d4ed8; }
+  /* Textarea wrap – independently resizable per panel */
+  .preeti-ta-wrap {
+    flex: 1;
+    position: relative;
+    min-height: 300px;
+    height: 340px;
+    display: flex;
+    flex-direction: column;
+  }
+  .preeti-textarea {
+    flex: 1;
+    border: none;
+    outline: none;
+    resize: none;
+    padding: 13px 15px;
+    font-size: 15.5px;
+    line-height: 1.85;
+    font-family: var(--font-body);
+    color: #111827;
+    background: #fff;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+  }
+  .preeti-output.preeti-editable {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 13px 15px;
+    font-size: 16px;
+    line-height: 1.9;
+    font-family: 'Preeti', 'Arial Unicode MS', serif;
+    color: #111;
+    background: #fff;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-y: auto;
+    cursor: text;
+    height: 100%;
+    box-sizing: border-box;
+  }
+  .preeti-output.preeti-editable:empty::before {
+    content: attr(data-placeholder);
+    color: #9ca3af;
+    font-family: var(--font-body);
+    font-size: 13px;
+    pointer-events: none;
+  }
+  /* P2U (Preeti→Unicode) output box */
+  .p2u-output {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 13px 15px;
+    font-size: 16px;
+    line-height: 1.9;
+    font-family: var(--font-body);
+    color: #111;
+    background: #fff;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-y: auto;
+    height: 100%;
+    box-sizing: border-box;
+  }
+  .p2u-output:empty::before {
+    content: attr(data-placeholder);
+    color: #9ca3af;
+    font-size: 13px;
+    pointer-events: none;
+  }
+  /* P2U input textarea */
+  .p2u-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    resize: none;
+    padding: 13px 15px;
+    font-size: 16px;
+    line-height: 1.9;
+    font-family: 'Preeti', 'Arial Unicode MS', serif;
+    color: #111827;
+    background: #fff;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+  }
+  /* Corner drag-resize handle */
+  .preeti-resize {
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 20px; height: 20px;
+    cursor: se-resize;
+    z-index: 4;
+    opacity: .35;
+    transition: opacity .15s;
+  }
+  .preeti-resize:hover { opacity: .9; }
+  .preeti-resize::after {
+    content: '';
+    position: absolute;
+    bottom: 3px; right: 3px;
+    width: 10px; height: 10px;
+    border-right: 2.5px solid #374151;
+    border-bottom: 2.5px solid #374151;
+    border-radius: 0 0 2px 0;
+  }
+  /* Bottom action bar */
+  .preeti-action-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0 4px;
+    gap: 10px;
+  }
+  .preeti-convert-btn {
+    background: #fff;
+    color: #111827;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    padding: 8px 22px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: background .13s;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+  }
+  .preeti-convert-btn:hover { background: #f3f4f6; border-color: #9ca3af; }
+  .preeti-action-right { display: flex; align-items: center; gap: 8px; }
+  .preeti-clearall-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: #fff;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    padding: 6px 13px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: background .12s;
+  }
+  .preeti-clearall-btn:hover { background: #fef2f2; border-color: #fca5a5; color: #dc2626; }
+  .preeti-clearall-icon {
+    width: 16px; height: 16px;
+    background: #2563eb;
+    border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 10px; font-weight: 700; flex-shrink: 0;
+  }
+  .preeti-char-count { font-size: 12px; color: #6b7280; white-space: nowrap; }
+  .preeti-info-bar {
+    margin-top: 10px;
+    padding: 8px 13px;
+    background: #f0f7ff;
+    border: 1px solid #bee3f8;
+    border-radius: 8px;
+    font-size: 12.5px;
+    color: #2c5282;
+    line-height: 1.5;
+  }
+  @media (max-width: 700px) {
+    .preeti-panel-wrap { flex-direction: column; }
+    .preeti-panel:first-child { border-right: none; border-bottom: 1.5px solid #d1d5db; }
+    .preeti-top-row { flex-direction: column; align-items: flex-start; }
+    .preeti-mode-tab { font-size: 14px; padding: 8px 15px; }
+  }
+
   /* ===== COPY BTN ===== */
   .copy-btn {
     position: absolute;
@@ -1041,8 +1330,6 @@
   .tax-slab-source{font-size:10px;color:var(--text-muted);margin-top:10px;line-height:1.7;}
   .pit-right{gap:12px;}
 
-  /* Preeti output */
-  .preeti-output { font-family: 'Preeti', 'Arial Unicode MS', sans-serif; font-size: 22px; line-height: 1.8; }
 
   /* ===== DATE CONVERTER REDESIGN ===== */
   .date-tool-tabs { display:flex; gap:0; background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:4px; margin-bottom:24px; width:fit-content; }
@@ -2075,79 +2362,382 @@
 
 <!-- ===== UNICODE CONVERTER ===== -->
 <div id="sec-unicode" class="section">
-  <div class="page-header">
-    <h1>English → Nepali Unicode</h1>
-    <p>Type Romanized Nepali — press <strong>Space</strong> or <strong>Enter</strong> to convert in place</p>
-  </div>
-  <div class="offline-banner">
-    <div class="offline-banner-text">
-      <strong>🟢 Online = 100% Free &amp; unlimited</strong> — Unicode &amp; Preeti Converter &nbsp;·&nbsp;
-      <strong>📴 Offline = limited by plan:</strong> Free (300 words or 5 min/day) · Basic Rs.500/yr (2 hrs/day) · Pro Rs.800/yr (5 hrs/day)
+
+  <!-- ── Title row ── -->
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px;">
+    <div>
+      <h1 style="font-size:26px;font-weight:900;color:#111827;margin:0 0 3px;letter-spacing:-.02em;">English → Nepali Unicode</h1>
+      <p style="margin:0;font-size:13px;color:#6b7280;">Write, format &amp; export Nepali documents</p>
     </div>
-    <a class="offline-banner-link" onclick="openPlansModal()">View plans →</a>
   </div>
-  <div class="card" style="max-width:860px;margin:0 auto;">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
-      <div class="card-title" style="margin:0;"><div class="icon icon-red">⌨️</div> Type English, Get Nepali</div>
-      <div style="display:flex;align-items:center;gap:6px;">
-        <span style="font-size:11px;color:var(--text-muted);">Mode:</span>
-        <button id="unicodeModeBtn" onclick="toggleUnicodeMode()" style="background:var(--blue);color:#fff;border:none;border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font-body);">⚡ Live Replace</button>
+
+  <!-- ── Online/Offline banner ── -->
+  <div style="background:#1e293b;border-radius:10px;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
+    <div style="font-size:13px;color:#e2e8f0;line-height:1.6;">
+      <span style="color:#4ade80;font-weight:700;">🟢 Online = 100% Free &amp; unlimited</span> — Unicode &amp; Preeti Converter &nbsp;·&nbsp;
+      <span style="color:#fbbf24;font-weight:700;">📴 Offline = limited by plan:</span>
+      <span style="color:#94a3b8;"> Free</span>
+      <span style="color:#e2e8f0;font-weight:600;"> · Basic · Pro</span>
+    </div>
+    <button onclick="openPlansModal()" style="background:#1d4ed8;color:#fff;border:none;border-radius:8px;padding:7px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font-body);white-space:nowrap;">View plans →</button>
+  </div>
+
+  <!-- ── Toolbar ── -->
+  <div style="background:#f8f8f7;border:1.5px solid #e5e7eb;border-radius:12px 12px 0 0;padding:8px 12px;display:flex;flex-wrap:wrap;align-items:center;gap:6px;">
+
+    <!-- Undo/Redo -->
+    <div class="wp-tb-group">
+      <button class="wp-tb-btn" onclick="ucExec('undo')" title="Undo" style="min-width:52px;flex-direction:column;gap:1px;padding:5px 8px;">
+        <span style="font-size:16px;line-height:1;">&#x21B6;</span>
+        <span style="font-size:9px;color:#6b7280;font-family:var(--font-body);">undo</span>
+      </button>
+      <button class="wp-tb-btn" onclick="ucExec('redo')" title="Redo" style="min-width:52px;flex-direction:column;gap:1px;padding:5px 8px;border-left:1px solid #e5e7eb;">
+        <span style="font-size:16px;line-height:1;">&#x21B7;</span>
+        <span style="font-size:9px;color:#6b7280;font-family:var(--font-body);">Redo</span>
+      </button>
+    </div>
+
+    <div class="wp-divider"></div>
+
+    <!-- Font -->
+    <div class="wp-tb-group" style="padding:0;">
+      <select onchange="ucFont(this.value)" style="font-size:12px;font-family:var(--font-body);border:none;outline:none;padding:6px 8px;background:transparent;cursor:pointer;min-width:130px;color:#374151;">
+        <option value="'Mukta',sans-serif">Aptos Narrow</option>
+        <option value="'Noto Sans Devanagari',sans-serif">Noto Sans Dev.</option>
+        <option value="'Noto Serif Devanagari',serif">Noto Serif Dev.</option>
+        <option value="'Hind',sans-serif">Hind</option>
+        <option value="'Laila',serif">Laila</option>
+        <option value="Fraunces,serif">Fraunces</option>
+        <option value="Georgia,serif">Georgia</option>
+      </select>
+    </div>
+
+    <!-- Font size -->
+    <div class="wp-tb-group" style="padding:0;">
+      <select id="uc-size-sel" onchange="ucFontSize(this.value)" style="font-size:12px;font-family:var(--font-body);border:none;outline:none;padding:6px 8px;background:transparent;cursor:pointer;width:62px;color:#374151;">
+        <option>9</option><option>10</option><option selected>11</option>
+        <option>12</option><option>14</option><option>16</option>
+        <option>18</option><option>20</option><option>24</option>
+      </select>
+    </div>
+
+    <!-- A↑ A↓ -->
+    <div class="wp-tb-group">
+      <button class="wp-tb-btn" onclick="ucGrowFont()" title="Increase" style="padding:5px 9px;font-size:15px;font-weight:700;">A<sup style="font-size:9px;">&#x2191;</sup></button>
+      <button class="wp-tb-btn" onclick="ucShrinkFont()" title="Decrease" style="padding:5px 9px;font-size:15px;font-weight:700;border-left:1px solid #e5e7eb;">A<sup style="font-size:9px;">&#x2193;</sup></button>
+    </div>
+
+    <div class="wp-divider"></div>
+
+    <!-- Lists -->
+    <div class="wp-tb-group">
+      <button class="wp-tb-btn" onclick="ucExec('insertUnorderedList')" title="Bullet list" style="padding:5px 9px;font-size:14px;">&#x2630; <span style="font-size:9px;">&#x2304;</span></button>
+      <button class="wp-tb-btn" onclick="ucExec('insertOrderedList')" title="Numbered list" style="padding:5px 9px;font-size:14px;border-left:1px solid #e5e7eb;">&#x2116; <span style="font-size:9px;">&#x2304;</span></button>
+      <button class="wp-tb-btn" onclick="ucExec('outdent')" title="Outdent" style="padding:5px 9px;font-size:14px;border-left:1px solid #e5e7eb;">&#x21E4;</button>
+      <button class="wp-tb-btn" onclick="ucExec('indent')" title="Indent" style="padding:5px 9px;font-size:14px;border-left:1px solid #e5e7eb;">&#x21E5;</button>
+    </div>
+
+    <div class="wp-divider"></div>
+
+    <!-- B I U -->
+    <div class="wp-tb-group">
+      <button class="wp-tb-btn" id="uc-btn-bold"      onclick="ucExec('bold')"      title="Bold"      style="padding:5px 11px;font-weight:900;font-size:14px;font-family:Georgia,serif;">B</button>
+      <button class="wp-tb-btn" id="uc-btn-italic"    onclick="ucExec('italic')"    title="Italic"    style="padding:5px 10px;font-size:14px;font-style:italic;font-family:Georgia,serif;border-left:1px solid #e5e7eb;">I</button>
+      <button class="wp-tb-btn" id="uc-btn-underline" onclick="ucExec('underline')" title="Underline" style="padding:5px 10px;font-size:14px;text-decoration:underline;font-family:Georgia,serif;border-left:1px solid #e5e7eb;">U</button>
+      <!-- Highlight -->
+      <button class="wp-tb-btn" onclick="ucExec('hiliteColor','#fef08a')" title="Highlight" style="padding:5px 10px;font-size:13px;border-left:1px solid #e5e7eb;">&#x1F58A;&#xFE0F;</button>
+      <!-- Text color -->
+      <button class="wp-tb-btn" onclick="ucExec('foreColor','#dc2626')" title="Red text" style="padding:5px 9px;font-size:13px;font-weight:700;color:#dc2626;border-left:1px solid #e5e7eb;">A<span style="display:block;height:3px;background:#dc2626;border-radius:2px;margin-top:1px;"></span></button>
+    </div>
+
+    <div class="wp-divider"></div>
+
+    <!-- Alignment -->
+    <div class="wp-tb-group">
+      <button class="wp-tb-btn" onclick="ucExec('justifyLeft')"   title="Left"    style="padding:5px 9px;font-size:14px;">&#x2261; <span style="font-size:9px;">&#x2304;</span></button>
+      <button class="wp-tb-btn" onclick="ucExec('justifyCenter')" title="Center"  style="padding:5px 9px;font-size:14px;border-left:1px solid #e5e7eb;">&#x2630; <span style="font-size:9px;">&#x2304;</span></button>
+      <button class="wp-tb-btn" onclick="ucExec('justifyRight')"  title="Right"   style="padding:5px 9px;font-size:14px;border-left:1px solid #e5e7eb;">&#x2261; <span style="font-size:9px;">&#x2304;</span></button>
+      <button class="wp-tb-btn" onclick="ucExec('justifyFull')"   title="Justify" style="padding:5px 9px;font-size:14px;border-left:1px solid #e5e7eb;">&#x2630;</button>
+    </div>
+
+  </div><!-- /toolbar -->
+
+  <!-- ── Editor canvas ── -->
+  <div style="background:#e8eaed;border:1.5px solid #e5e7eb;border-top:none;border-radius:0 0 12px 12px;padding:0 0 16px;">
+
+    <!-- Mode badge + action buttons inside canvas top -->
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:10px 16px 8px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <!-- Purple square icon -->
+        <span style="width:14px;height:14px;background:#7c3aed;border-radius:3px;display:inline-block;flex-shrink:0;"></span>
+        <span style="font-size:14px;font-weight:700;color:#374151;">Type English, Get Nepali</span>
+      </div>
+      <!-- Mode pill + limit display -->
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <div id="uc-mode-badge" style="background:#1e293b;color:#e2e8f0;border-radius:8px;padding:5px 14px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid #334155;" onclick="ucToggleMode()">
+          <span id="uc-mode-label">Mode: Offline</span>
+        </div>
+        <div id="uc-limit-badge" style="background:#fff;border:2px solid #111;border-radius:8px;padding:5px 14px;font-size:12px;font-weight:700;color:#111;min-width:220px;text-align:center;">
+          <span id="uc-limit-text">Remaining word=300 or Minutes=10 min</span>
+        </div>
+        <button onclick="clearUnicode()" style="background:#fff;border:1.5px solid #d1d5db;border-radius:7px;padding:6px 14px;font-size:12px;font-weight:600;color:#374151;cursor:pointer;font-family:var(--font-body);">&#x2715; Clear</button>
+        <button onclick="ucCopyAll()" style="background:#fff;border:1.5px solid #d1d5db;border-radius:7px;padding:6px 14px;font-size:12px;font-weight:600;color:#374151;cursor:pointer;font-family:var(--font-body);">&#x1F4CB; Copy</button>
+        <button onclick="ucPrint()" style="background:#fff;border:1.5px solid #d1d5db;border-radius:7px;padding:6px 14px;font-size:12px;font-weight:600;color:#374151;cursor:pointer;font-family:var(--font-body);">&#x1F5A8;&#xFE0F; Print</button>
+        <button onclick="ucDownloadDocx()" style="background:#dc2626;color:#fff;border:none;border-radius:7px;padding:6px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font-body);display:flex;align-items:center;gap:6px;box-shadow:0 2px 6px rgba(220,38,38,.3);">&#x2B07;&#xFE0F; Download .docx</button>
       </div>
     </div>
-    <div class="suggestion-wrapper" style="position:relative;">
-      <textarea id="unicode-input" placeholder="Type here: namaste → नमस्ते, kathmandu → काठमाडौं &#10;Press Space or Enter after each word to convert..." style="min-height:280px; font-size:18px; line-height:1.8; font-family:var(--font-body);" oninput="handleUnicodeInput(event)" onkeydown="handleUnicodeKey(event)"></textarea>
-      <div id="suggestion-box" class="suggestion-dropdown"></div>
+
+    <!-- Paper page with editor -->
+    <div style="max-width:760px;margin:0 auto;position:relative;">
+      <!-- Suggestion dropdown -->
+      <div id="suggestion-box" style="display:none;position:absolute;background:#fff;border:1.5px solid #e5e7eb;border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,.15);min-width:210px;overflow:hidden;z-index:50;"></div>
+
+      <!-- Editor -->
+      <div id="unicode-editor"
+        contenteditable="true"
+        spellcheck="false"
+        style="background:#fff;min-height:340px;padding:22px 28px;font-family:'Mukta',sans-serif;font-size:16px;line-height:1.85;outline:none;color:#111827;box-shadow:0 2px 16px rgba(0,0,0,.10);position:relative;z-index:2;"
+        oninput="handleUnicodeInput(event)"
+        onkeydown="handleUnicodeKey(event)"
+        onmouseup="ucToolbarSync()"
+        onfocus="ucToolbarSync()"></div>
+
+      <!-- Resize handle -->
+      <div style="text-align:right;padding:4px 8px 0;">
+        <span style="font-size:11px;color:#9ca3af;cursor:ns-resize;user-select:none;" id="uc-resize-handle">&#x21C5; resize</span>
+      </div>
     </div>
-    <div class="btn-row" style="margin-top:10px;">
-      <button class="btn btn-ghost btn-sm" onclick="clearUnicode()">✕ Clear</button>
-      <button class="btn btn-secondary btn-sm" onclick="copyUnicodeText()">📋 Copy</button>
-      <span id="unicodeCharCount" style="font-size:12px;color:var(--text-muted);margin-left:auto;align-self:center;"></span>
-    </div>
-    <div class="alert alert-info" style="margin-top:10px;">
-      <span class="alert-icon">💡</span>
+
+  </div><!-- /canvas -->
+
+  <!-- ── Bottom hint + word count ── -->
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:10px;background:#fffbeb;border:1.5px solid #fde68a;border-radius:8px;padding:9px 14px;">
+    <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#92400e;">
+      <span style="font-size:16px;">💡</span>
       <span>Type Romanized Nepali — words auto-convert on <strong>Space/Enter</strong>. Use <strong>↑↓</strong> arrows for suggestions, <strong>Enter</strong> to pick.</span>
     </div>
+    <span id="unicodeCharCount" style="font-size:13px;color:#6b7280;font-weight:600;white-space:nowrap;">0 words · 0 chars</span>
   </div>
-  <!-- Hidden output div kept for backward compat with copyText -->
+
+  <!-- Hidden compat elements -->
+  <textarea id="unicode-input" style="display:none;"></textarea>
   <div id="unicode-output" style="display:none;"></div>
   <div class="other-tools-strip" id="unicode-tools-strip"></div>
+
+  <style>
+    @keyframes uc-blink { 0%,100%{opacity:1} 50%{opacity:.35} }
+    .uc-limit-blink { animation: uc-blink 1.1s ease-in-out infinite; }
+  </style>
 </div>
 
 <!-- ===== PREETI CONVERTER ===== -->
 <div id="sec-preeti" class="section">
-  <div class="page-header">
-    <h1>Unicode → Preeti Font</h1>
-    <p>Convert Devanagari Unicode text to Preeti font encoding</p>
-  </div>
-  <div class="offline-banner">
-    <div class="offline-banner-text">
-      <strong>🟢 Online = 100% Free &amp; unlimited</strong> — both converters &nbsp;·&nbsp;
-      <strong>📴 Offline = limited by plan:</strong> Free (300 words or 5 min/day) · Basic Rs.500/yr (2 hrs/day) · Pro Rs.800/yr (5 hrs/day)
+
+  <!-- ── Top row: tabs + Download button ── -->
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px;">
+    <div style="display:flex;gap:0;">
+      <button id="ptab-u2p" onclick="preetiSetMode('u2p')"
+        style="padding:10px 28px;font-size:15px;font-weight:700;font-family:var(--font-body);border:2px solid #111;border-right:none;border-radius:8px 0 0 8px;background:#111;color:#fff;cursor:pointer;transition:all .13s;">
+        Unicode &#x2192; Preeti Font
+      </button>
+      <button id="ptab-p2u" onclick="preetiSetMode('p2u')"
+        style="padding:10px 28px;font-size:15px;font-weight:700;font-family:var(--font-body);border:2px solid #111;border-radius:0 8px 8px 0;background:#fff;color:#111;cursor:pointer;transition:all .13s;">
+        Preeti Font &#x2192; Unicode
+      </button>
     </div>
-    <a class="offline-banner-link" onclick="openPlansModal()">View plans →</a>
+    <button onclick="showSection('fonts')"
+      style="border:2px solid #d1d5db;border-radius:10px;padding:8px 20px;background:#fff;cursor:pointer;font-family:var(--font-body);text-align:center;line-height:1.3;">
+      <div style="font-size:14px;font-weight:700;color:#111;">Download</div>
+      <div style="font-size:11px;color:#6b7280;">Preeti Font and other Nepali Font</div>
+    </button>
   </div>
-  <div class="grid-2">
-    <div class="card">
-      <div class="card-title"><div class="icon icon-red">अ</div> Unicode Input</div>
-      <textarea id="preeti-input" placeholder="पेस्ट गर्नुहोस् नेपाली युनिकोड यहाँ..." style="min-height:220px; font-size:18px;" oninput="convertToPreeti()"></textarea>
-      <div class="btn-row">
-        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('preeti-input').value='';convertToPreeti()">✕ Clear</button>
+
+  <!-- Subtitle -->
+  <p id="preeti-subtitle" style="margin:0 0 10px;font-size:13px;color:#6b7280;">Convert Devanagari Unicode text to Preeti font encoding &#x2014; edit output to correct any errors before copying</p>
+
+  <!-- Online/Offline banner -->
+  <div style="background:#1e293b;border-radius:10px;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
+    <div style="font-size:13px;color:#e2e8f0;line-height:1.6;">
+      <span style="color:#4ade80;font-weight:700;">&#x1F7E2; Online = 100% Free &amp; unlimited</span> &#x2014; both converters &nbsp;&middot;&nbsp;
+      <span style="color:#fbbf24;font-weight:700;">&#x1F4F4; Offline = limited by plan:</span>
+      <span style="color:#94a3b8;"> Free (300 words or 10 min/day) &middot; Basic Rs.500/yr (2 hrs/day) &middot; Pro Rs.800/yr (5 hrs/day)</span>
+    </div>
+    <button onclick="openPlansModal()" style="background:#1d4ed8;color:#fff;border:none;border-radius:8px;padding:7px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font-body);white-space:nowrap;">View plans &#x2192;</button>
+  </div>
+
+  <!-- ── Shared Toolbar ── -->
+  <div style="background:#f8f8f7;border:1.5px solid #e5e7eb;border-radius:12px 12px 0 0;padding:8px 12px;display:flex;flex-wrap:wrap;align-items:center;gap:6px;">
+    <div class="wp-tb-group">
+      <button class="wp-tb-btn" onclick="preetiExec('undo')" title="Undo" style="min-width:52px;flex-direction:column;gap:1px;padding:5px 8px;">
+        <span style="font-size:16px;line-height:1;">&#x21B6;</span>
+        <span style="font-size:9px;color:#6b7280;font-family:var(--font-body);">undo</span>
+      </button>
+      <button class="wp-tb-btn" onclick="preetiExec('redo')" title="Redo" style="min-width:52px;flex-direction:column;gap:1px;padding:5px 8px;border-left:1px solid #e5e7eb;">
+        <span style="font-size:16px;line-height:1;">&#x21B7;</span>
+        <span style="font-size:9px;color:#6b7280;font-family:var(--font-body);">Redo</span>
+      </button>
+    </div>
+    <div class="wp-divider"></div>
+    <div class="wp-tb-group" style="padding:0;">
+      <select onchange="preetiSetFont(this.value)" style="font-size:12px;font-family:var(--font-body);border:none;outline:none;padding:6px 8px;background:transparent;cursor:pointer;min-width:130px;color:#374151;">
+        <option value="'Mukta',sans-serif">Aptos Narrow</option>
+        <option value="'Noto Sans Devanagari',sans-serif">Noto Sans Dev.</option>
+        <option value="Georgia,serif">Georgia</option>
+        <option value="Arial,sans-serif">Arial</option>
+      </select>
+    </div>
+    <div class="wp-tb-group" style="padding:0;">
+      <select id="preeti-size-sel" onchange="preetiSetFontSize(this.value)" style="font-size:12px;font-family:var(--font-body);border:none;outline:none;padding:6px 8px;background:transparent;cursor:pointer;width:62px;color:#374151;">
+        <option>9</option><option>10</option><option selected>11</option>
+        <option>12</option><option>14</option><option>16</option><option>18</option><option>20</option><option>24</option>
+      </select>
+    </div>
+    <div class="wp-tb-group">
+      <button class="wp-tb-btn" onclick="preetiGrowFont()" style="padding:5px 9px;font-size:15px;font-weight:700;">A<sup style="font-size:9px;">&#x2191;</sup></button>
+      <button class="wp-tb-btn" onclick="preetiShrinkFont()" style="padding:5px 9px;font-size:15px;font-weight:700;border-left:1px solid #e5e7eb;">A<sup style="font-size:9px;">&#x2193;</sup></button>
+    </div>
+    <div class="wp-divider"></div>
+    <div class="wp-tb-group">
+      <button class="wp-tb-btn" onclick="preetiExec('insertUnorderedList')" style="padding:5px 9px;font-size:14px;">&#x2630; <span style="font-size:9px;">&#x2304;</span></button>
+      <button class="wp-tb-btn" onclick="preetiExec('insertOrderedList')" style="padding:5px 9px;font-size:14px;border-left:1px solid #e5e7eb;">&#x2116; <span style="font-size:9px;">&#x2304;</span></button>
+      <button class="wp-tb-btn" onclick="preetiExec('outdent')" style="padding:5px 9px;font-size:14px;border-left:1px solid #e5e7eb;">&#x21E4;</button>
+      <button class="wp-tb-btn" onclick="preetiExec('indent')" style="padding:5px 9px;font-size:14px;border-left:1px solid #e5e7eb;">&#x21E5;</button>
+    </div>
+    <div class="wp-divider"></div>
+    <div class="wp-tb-group">
+      <button class="wp-tb-btn" onclick="preetiExec('bold')"      style="padding:5px 11px;font-weight:900;font-size:14px;font-family:Georgia,serif;">B</button>
+      <button class="wp-tb-btn" onclick="preetiExec('italic')"    style="padding:5px 10px;font-size:14px;font-style:italic;font-family:Georgia,serif;border-left:1px solid #e5e7eb;">I</button>
+      <button class="wp-tb-btn" onclick="preetiExec('underline')" style="padding:5px 10px;font-size:14px;text-decoration:underline;font-family:Georgia,serif;border-left:1px solid #e5e7eb;">U</button>
+      <button class="wp-tb-btn" onclick="preetiExec('hiliteColor','#fef08a')" title="Highlight" style="padding:5px 10px;font-size:13px;border-left:1px solid #e5e7eb;">&#x1F58A;&#xFE0F;</button>
+      <button class="wp-tb-btn" onclick="preetiExec('foreColor','#dc2626')" title="Red text" style="padding:5px 9px;font-size:13px;font-weight:700;color:#dc2626;border-left:1px solid #e5e7eb;">A<span style="display:block;height:3px;background:#dc2626;border-radius:2px;margin-top:1px;"></span></button>
+    </div>
+    <div class="wp-divider"></div>
+    <div class="wp-tb-group">
+      <button class="wp-tb-btn" onclick="preetiExec('justifyLeft')"   style="padding:5px 9px;font-size:14px;">&#x2261; <span style="font-size:9px;">&#x2304;</span></button>
+      <button class="wp-tb-btn" onclick="preetiExec('justifyCenter')" style="padding:5px 9px;font-size:14px;border-left:1px solid #e5e7eb;">&#x2630; <span style="font-size:9px;">&#x2304;</span></button>
+      <button class="wp-tb-btn" onclick="preetiExec('justifyRight')"  style="padding:5px 9px;font-size:14px;border-left:1px solid #e5e7eb;">&#x2261; <span style="font-size:9px;">&#x2304;</span></button>
+      <button class="wp-tb-btn" onclick="preetiExec('justifyFull')"   style="padding:5px 9px;font-size:14px;border-left:1px solid #e5e7eb;">&#x2630;</button>
+    </div>
+  </div><!-- /toolbar -->
+
+  <!-- ════════ CANVAS (shared wrapper) ════════ -->
+  <div style="background:#e8eaed;border:1.5px solid #e5e7eb;border-top:none;border-radius:0 0 12px 12px;padding:12px 16px 16px;">
+
+    <!-- Mode badge + action buttons row -->
+    <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+      <button id="preeti-mode-badge" onclick="preetiToggleMode()"
+        style="background:#14532d;color:#fff;border:2px solid #166534;border-radius:8px;padding:6px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font-body);transition:all .13s;">
+        Mode: Online
+      </button>
+      <div id="preeti-limit-badge" style="display:none;background:#fff;border:2px solid #111;border-radius:8px;padding:5px 14px;font-size:12px;font-weight:700;color:#111;min-width:220px;text-align:center;">
+        <span id="preeti-limit-text">Remaining word=300 or Minutes=10 min</span>
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+        <button onclick="preetiCopyOutput()" id="preeti-copy-btn"
+          style="background:#fff;border:1.5px solid #d1d5db;border-radius:7px;padding:6px 14px;font-size:12px;font-weight:600;color:#374151;cursor:pointer;font-family:var(--font-body);">&#x1F4CB; Copy</button>
+        <button onclick="preetiPrint()"
+          style="background:#fff;border:1.5px solid #d1d5db;border-radius:7px;padding:6px 14px;font-size:12px;font-weight:600;color:#374151;cursor:pointer;font-family:var(--font-body);">&#x1F5A8;&#xFE0F; Print</button>
+        <button onclick="preetiDownloadDocx()"
+          style="background:#dc2626;color:#fff;border:none;border-radius:7px;padding:6px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font-body);box-shadow:0 2px 6px rgba(220,38,38,.3);">&#x2B07;&#xFE0F; Download .docx</button>
       </div>
     </div>
-    <div class="card">
-      <div class="card-title"><div class="icon icon-blue">प्र</div> Preeti Output</div>
-      <div class="output-area">
-        <div id="preeti-output" class="preeti-output" style="min-height:220px; padding:12px; background:var(--bg); border-radius:var(--radius-sm); font-size:20px; word-break:break-word;"></div>
-        <button class="copy-btn" onclick="copyText('preeti-output')">Copy</button>
+
+    <!-- ── Unicode → Preeti split panel ── -->
+    <div id="preeti-u2p-section">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border:1.5px solid #d1d5db;border-radius:8px;overflow:hidden;background:#fff;">
+        <!-- Left: Unicode Input -->
+        <div style="border-right:1.5px solid #d1d5db;">
+          <div style="padding:8px 14px;background:#f8f8f7;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-size:13px;font-weight:700;color:#374151;">Unicode Input</span>
+            <button onclick="preetiClearInput()" style="font-size:12px;color:#6b7280;background:none;border:none;cursor:pointer;font-family:var(--font-body);">&#x2715; Clear</button>
+          </div>
+          <div id="preeti-left-wrap" style="position:relative;">
+            <textarea id="preeti-input" class="preeti-textarea"
+              placeholder="&#x92F;&#x939;&#x93E;&#x901; &#x92F;&#x941;&#x928;&#x93F;&#x915;&#x94B;&#x921; &#x928;&#x947;&#x92A;&#x93E;&#x932;&#x940; &#x91F;&#x93E;&#x907;&#x92A; &#x935;&#x93E; &#x92A;&#x947;&#x938;&#x94D;&#x91F; &#x917;&#x930;&#x94D;&#x928;&#x941;&#x939;&#x94B;&#x938;&#x94D;&#x2026;"
+              oninput="convertToPreeti()" style="width:100%;min-height:320px;padding:16px;font-size:15px;line-height:1.8;border:none;outline:none;resize:none;font-family:'Mukta',sans-serif;background:#fff;color:#111;"></textarea>
+            <div class="preeti-resize" id="preeti-left-resize" title="Drag to resize"></div>
+          </div>
+        </div>
+        <!-- Right: Preeti Output -->
+        <div>
+          <div style="padding:8px 14px;background:#f8f8f7;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-size:13px;font-weight:700;color:#374151;">Preeti Output</span>
+          </div>
+          <div id="preeti-right-wrap" style="position:relative;">
+            <div id="preeti-output" class="preeti-output preeti-editable"
+              contenteditable="true" spellcheck="false"
+              data-placeholder="Converted Preeti text will appear here &#x2014; you can also type directly in Preeti font and edit before copying&#x2026;"
+              oninput="preetiOutputChanged()"
+              style="min-height:320px;padding:16px;font-size:15px;line-height:1.8;outline:none;font-family:Preeti,serif;color:#111;"></div>
+            <div class="preeti-resize" id="preeti-right-resize" title="Drag to resize"></div>
+          </div>
+        </div>
       </div>
-      <div style="margin-top:12px;">
-        <div class="alert alert-warning">
-          <span class="alert-icon">⚠️</span>
-          <span>Preeti font must be installed on your system for correct rendering. Output is Preeti-encoded text.</span>
+      <!-- Bottom action row -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;flex-wrap:wrap;gap:8px;">
+        <button onclick="convertToPreeti()" style="background:#1d4ed8;color:#fff;border:none;border-radius:8px;padding:9px 28px;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font-body);">Convert to Preeti</button>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <button onclick="preetiClearAll()" style="background:#fff;border:1.5px solid #d1d5db;border-radius:7px;padding:7px 16px;font-size:12px;font-weight:600;color:#374151;cursor:pointer;font-family:var(--font-body);">&#x21BA; Clear All</button>
+          <span id="preeti-char-count" style="font-size:13px;color:#6b7280;font-weight:500;">0 characters</span>
         </div>
       </div>
     </div>
+
+    <!-- ── Preeti → Unicode split panel ── -->
+    <div id="preeti-p2u-section" style="display:none;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border:1.5px solid #d1d5db;border-radius:8px;overflow:hidden;background:#fff;">
+        <!-- Left: Preeti Input -->
+        <div style="border-right:1.5px solid #d1d5db;">
+          <div style="padding:8px 14px;background:#f8f8f7;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-size:13px;font-weight:700;color:#374151;">Preeti Input</span>
+            <button onclick="p2uClearInput()" style="font-size:12px;color:#6b7280;background:none;border:none;cursor:pointer;font-family:var(--font-body);">&#x2715; Clear</button>
+          </div>
+          <div id="p2u-left-wrap" style="position:relative;">
+            <textarea id="p2u-input" class="p2u-input"
+              placeholder="Type or paste Preeti-encoded text here&#x2026;"
+              oninput="p2uConvert()" style="width:100%;min-height:320px;padding:16px;font-size:15px;line-height:1.8;border:none;outline:none;resize:none;font-family:Preeti,serif;background:#fff;color:#111;"></textarea>
+            <div class="preeti-resize" id="p2u-left-resize" title="Drag to resize"></div>
+          </div>
+        </div>
+        <!-- Right: Unicode Output -->
+        <div>
+          <div style="padding:8px 14px;background:#f8f8f7;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-size:13px;font-weight:700;color:#374151;">Unicode Output</span>
+            <button id="p2u-copy-btn" onclick="p2uCopyOutput()" style="font-size:12px;color:#1d4ed8;background:none;border:none;cursor:pointer;font-family:var(--font-body);font-weight:600;">Copy</button>
+          </div>
+          <div id="p2u-right-wrap" style="position:relative;">
+            <div id="p2u-output" class="p2u-output"
+              contenteditable="true" spellcheck="false"
+              data-placeholder="Converted Unicode Nepali text will appear here&#x2026;"
+              style="min-height:320px;padding:16px;font-size:15px;line-height:1.8;outline:none;font-family:'Mukta',sans-serif;color:#111;"></div>
+            <div class="preeti-resize" id="p2u-right-resize" title="Drag to resize"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Bottom action row -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;flex-wrap:wrap;gap:8px;">
+        <button onclick="p2uConvert()" style="background:#1d4ed8;color:#fff;border:none;border-radius:8px;padding:9px 28px;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font-body);">Convert to Unicode</button>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <button onclick="p2uClearAll()" style="background:#fff;border:1.5px solid #d1d5db;border-radius:7px;padding:7px 16px;font-size:12px;font-weight:600;color:#374151;cursor:pointer;font-family:var(--font-body);">&#x21BA; Clear All</button>
+          <span id="p2u-char-count" style="font-size:13px;color:#6b7280;font-weight:500;">0 characters</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /canvas -->
+
+  <!-- Info bar -->
+  <div style="display:flex;align-items:flex-start;gap:8px;margin-top:10px;background:#fffbeb;border:1.5px solid #fde68a;border-radius:8px;padding:10px 14px;font-size:13px;color:#92400e;line-height:1.6;">
+    <span style="font-size:16px;flex-shrink:0;">&#x1F4A1;</span>
+    <span><strong>Preeti font loads automatically</strong> &#x2014; output renders as Nepali text in your browser.
+    You can <strong>edit the output directly</strong> to fix any errors, then <strong>Copy</strong> and paste into MS Word (set the font to <strong>Preeti</strong> in Word).</span>
   </div>
+
+  <style>
+    @keyframes preeti-blink { 0%,100%{opacity:1} 50%{opacity:.35} }
+    .preeti-limit-blink { animation: preeti-blink 1.1s ease-in-out infinite; }
+  </style>
+
   <div class="other-tools-strip" id="preeti-tools-strip"></div>
 </div>
 
@@ -4103,73 +4693,191 @@
 
 <!-- ===== NEPALI WRITER / WORD PROCESSOR ===== -->
 <div id="sec-wordproc" class="section">
-  <div class="section-header">
-    <div class="section-icon icon-green">✍️</div>
-    <div><div class="section-title">Nepali Writer</div><div class="section-sub">Write, format &amp; export Nepali documents</div></div>
-  </div>
-  <div class="card" style="padding:0;overflow:hidden;">
-    <!-- Toolbar -->
-    <div id="wp-toolbar" style="display:flex;flex-wrap:wrap;gap:4px;padding:10px 14px;background:#f4f3f0;border-bottom:1px solid var(--border);">
-      <button class="wp-btn" onclick="wpExec('bold')" title="Bold"><b>B</b></button>
-      <button class="wp-btn" onclick="wpExec('italic')" title="Italic"><i>I</i></button>
-      <button class="wp-btn" onclick="wpExec('underline')" title="Underline"><u>U</u></button>
-      <span style="width:1px;background:var(--border);margin:2px 4px;"></span>
-      <button class="wp-btn" onclick="wpExec('justifyLeft')" title="Left">⬅</button>
-      <button class="wp-btn" onclick="wpExec('justifyCenter')" title="Center">≡</button>
-      <button class="wp-btn" onclick="wpExec('justifyRight')" title="Right">➡</button>
-      <span style="width:1px;background:var(--border);margin:2px 4px;"></span>
-      <select onchange="wpExec('fontSize',this.value);this.value=''" style="font-size:12px;border:1px solid var(--border);border-radius:6px;padding:2px 6px;background:#fff;">
-        <option value="">Size</option>
-        <option value="1">Small</option>
-        <option value="3">Normal</option>
-        <option value="5">Large</option>
-        <option value="7">Huge</option>
-      </select>
-      <select onchange="wpFont(this.value);this.value=''" style="font-size:12px;border:1px solid var(--border);border-radius:6px;padding:2px 6px;background:#fff;">
-        <option value="">Font</option>
-        <optgroup label="Nepali / Devanagari">
-          <option value="'Mukta', sans-serif">Mukta</option>
-          <option value="'Hind', sans-serif">Hind</option>
-          <option value="'Laila', serif">Laila</option>
-          <option value="'Baloo 2', cursive">Baloo 2</option>
-          <option value="'Noto Sans Devanagari', sans-serif">Noto Sans Dev.</option>
-          <option value="'Noto Serif Devanagari', serif">Noto Serif Dev.</option>
-          <option value="'Eczar', serif">Eczar</option>
-          <option value="'Karma', serif">Karma</option>
-          <option value="'Rajdhani', sans-serif">Rajdhani</option>
-          <option value="'Tiro Devanagari Hindi', serif">Tiro Dev. Hindi</option>
-        </optgroup>
-        <optgroup label="Latin / General">
-          <option value="Fraunces, serif">Fraunces</option>
-          <option value="'DM Sans', sans-serif">DM Sans</option>
-          <option value="Georgia, serif">Georgia</option>
-          <option value="Arial, sans-serif">Arial</option>
-          <option value="'Poppins', sans-serif">Poppins</option>
-        </optgroup>
-      </select>
-      <span style="width:1px;background:var(--border);margin:2px 4px;"></span>
-      <button class="wp-btn" onclick="wpCopy()" title="Copy All">📋 Copy</button>
-      <button class="wp-btn" onclick="wpDownload()" title="Download TXT">⬇ TXT</button>
-      <button class="wp-btn" onclick="wpPrint()" title="Print">🖨 Print</button>
-      <button class="wp-btn wp-clear" onclick="wpClear()" title="Clear">🗑 Clear</button>
-      <span id="wp-wordcount" style="margin-left:auto;font-size:11px;color:var(--text-muted);align-self:center;padding-right:4px;"></span>
+
+  <!-- Top header bar -->
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px;">
+    <div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:22px;font-weight:900;color:#111;letter-spacing:-.02em;border:2.5px solid #111;border-radius:10px;padding:2px 12px;font-family:var(--font-body);">English to Nepali Writer</span>
+      </div>
+      <p style="margin:4px 0 0 2px;font-size:13px;color:#6b7280;">Write, format &amp; export Nepali documents</p>
     </div>
-    <!-- Editor -->
-    <div id="wp-editor" contenteditable="true" spellcheck="false"
-      style="min-height:420px;padding:24px 28px;font-family:'Fraunces',serif;font-size:17px;line-height:1.9;outline:none;color:var(--text-primary);"
-      oninput="wpCount()" onkeydown="wpTab(event)"
-      placeholder="यहाँ टाइप गर्नुहोस्..."></div>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span id="wp-wordcount" style="font-size:13px;color:#6b7280;font-weight:500;"></span>
+      <button onclick="wpDownloadDocx()" style="display:flex;align-items:center;gap:7px;background:#dc2626;color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font-body);box-shadow:0 2px 8px rgba(220,38,38,.28);transition:background .13s;" onmouseover="this.style.background='#b91c1c'" onmouseout="this.style.background='#dc2626'">
+        &#x2B07;&#xFE0F; Download .docx
+      </button>
+      <button onclick="wpCopy()" style="background:#fff;border:1.5px solid #d1d5db;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:600;color:#374151;cursor:pointer;font-family:var(--font-body);transition:background .12s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#fff'">&#x1F4CB; Copy</button>
+      <button onclick="wpPrint()" style="background:#fff;border:1.5px solid #d1d5db;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:600;color:#374151;cursor:pointer;font-family:var(--font-body);transition:background .12s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#fff'">&#x1F5A8;&#xFE0F; Print</button>
+    </div>
   </div>
+
+  <div class="card" style="padding:0;overflow:visible;border-radius:12px;border:1.5px solid #e5e7eb;">
+
+    <!-- ══ TOOLBAR ══ -->
+    <div id="wp-toolbar" style="padding:8px 12px;background:#f8f8f7;border-bottom:1.5px solid #e5e7eb;border-radius:12px 12px 0 0;display:flex;flex-wrap:wrap;align-items:center;gap:6px;">
+
+      <!-- Undo / Redo -->
+      <div class="wp-tb-group">
+        <button class="wp-tb-btn" onclick="wpExec('undo')" title="Undo" style="min-width:52px;flex-direction:column;gap:1px;padding:5px 8px;">
+          <span style="font-size:16px;line-height:1;">&#x21B6;</span>
+          <span style="font-size:9px;color:#6b7280;font-family:var(--font-body);">undo</span>
+        </button>
+        <button class="wp-tb-btn" onclick="wpExec('redo')" title="Redo" style="min-width:52px;flex-direction:column;gap:1px;padding:5px 8px;border-left:1px solid #e5e7eb;">
+          <span style="font-size:16px;line-height:1;">&#x21B7;</span>
+          <span style="font-size:9px;color:#6b7280;font-family:var(--font-body);">Redo</span>
+        </button>
+      </div>
+
+      <div class="wp-divider"></div>
+
+      <!-- Font family -->
+      <div class="wp-tb-group" style="padding:0;">
+        <select id="wp-font-sel" onchange="wpFont(this.value)" style="font-size:12px;font-family:var(--font-body);border:none;outline:none;padding:6px 8px;background:transparent;cursor:pointer;min-width:130px;color:#374151;">
+          <option value="'Mukta',sans-serif">Aptos Narrow</option>
+          <option value="'Noto Sans Devanagari',sans-serif">Noto Sans Dev.</option>
+          <option value="'Noto Serif Devanagari',serif">Noto Serif Dev.</option>
+          <option value="'Hind',sans-serif">Hind</option>
+          <option value="'Laila',serif">Laila</option>
+          <option value="'Mukta',sans-serif">Mukta</option>
+          <option value="'Eczar',serif">Eczar</option>
+          <option value="'Karma',serif">Karma</option>
+          <option value="Fraunces,serif">Fraunces</option>
+          <option value="Georgia,serif">Georgia</option>
+          <option value="Arial,sans-serif">Arial</option>
+        </select>
+      </div>
+
+      <!-- Font size -->
+      <div class="wp-tb-group" style="padding:0;">
+        <select id="wp-size-sel" onchange="wpApplyFontSize(this.value)" style="font-size:12px;font-family:var(--font-body);border:none;outline:none;padding:6px 8px;background:transparent;cursor:pointer;width:62px;color:#374151;">
+          <option>9</option><option>10</option><option selected>11</option>
+          <option>12</option><option>14</option><option>16</option>
+          <option>18</option><option>20</option><option>24</option>
+          <option>28</option><option>32</option><option>36</option><option>48</option>
+        </select>
+      </div>
+
+      <!-- Grow / Shrink -->
+      <div class="wp-tb-group">
+        <button class="wp-tb-btn" onclick="wpGrowFont()" title="Increase font size" style="padding:5px 9px;font-size:15px;font-weight:700;">A<sup style="font-size:9px;">&#x2191;</sup></button>
+        <button class="wp-tb-btn" onclick="wpShrinkFont()" title="Decrease font size" style="padding:5px 9px;font-size:15px;font-weight:700;border-left:1px solid #e5e7eb;">A<sup style="font-size:9px;">&#x2193;</sup></button>
+      </div>
+
+      <div class="wp-divider"></div>
+
+      <!-- Lists -->
+      <div class="wp-tb-group">
+        <button class="wp-tb-btn" onclick="wpExec('insertUnorderedList')" title="Bullet list" style="padding:5px 9px;font-size:14px;">&#x2630; <span style="font-size:9px;margin-left:2px;">&#x2304;</span></button>
+        <button class="wp-tb-btn" onclick="wpExec('insertOrderedList')" title="Numbered list" style="padding:5px 9px;font-size:14px;border-left:1px solid #e5e7eb;">&#x2116; <span style="font-size:9px;margin-left:2px;">&#x2304;</span></button>
+        <button class="wp-tb-btn" onclick="wpExec('outdent')" title="Outdent" style="padding:5px 9px;font-size:14px;border-left:1px solid #e5e7eb;">&#x21E4;</button>
+        <button class="wp-tb-btn" onclick="wpExec('indent')" title="Indent" style="padding:5px 9px;font-size:14px;border-left:1px solid #e5e7eb;">&#x21E5;</button>
+      </div>
+
+      <div class="wp-divider"></div>
+
+      <!-- Font group: B I U highlight color -->
+      <div class="wp-tb-group">
+        <button class="wp-tb-btn" id="wp-btn-bold"      onclick="wpExec('bold')"      title="Bold"      style="padding:5px 11px;font-weight:900;font-size:14px;font-family:Georgia,serif;">B</button>
+        <button class="wp-tb-btn" id="wp-btn-italic"    onclick="wpExec('italic')"    title="Italic"    style="padding:5px 10px;font-size:14px;font-style:italic;font-family:Georgia,serif;border-left:1px solid #e5e7eb;">I</button>
+        <button class="wp-tb-btn" id="wp-btn-underline" onclick="wpExec('underline')" title="Underline" style="padding:5px 10px;font-size:14px;text-decoration:underline;font-family:Georgia,serif;border-left:1px solid #e5e7eb;">U</button>
+        <!-- Highlight -->
+        <div style="position:relative;display:inline-flex;border-left:1px solid #e5e7eb;">
+          <button class="wp-tb-btn" onclick="wpHighlight()" title="Highlight" style="padding:5px 9px;font-size:13px;">&#x1F58A;&#xFE0F;</button>
+          <button class="wp-tb-btn" onclick="wpShowHlPicker(event)" style="padding:5px 4px;font-size:10px;border:none;border-left:1px solid #e5e7eb;">&#x25BE;</button>
+          <div id="wp-hl-picker" style="display:none;position:absolute;top:34px;left:0;background:#fff;border:1.5px solid #e5e7eb;border-radius:8px;padding:6px;box-shadow:0 4px 16px rgba(0,0,0,.15);z-index:200;display:none;flex-wrap:wrap;gap:4px;width:120px;">
+            <div onclick="wpSetHl('#fef08a')" style="width:22px;height:22px;background:#fef08a;border-radius:4px;cursor:pointer;border:1.5px solid #e5e7eb;"></div>
+            <div onclick="wpSetHl('#bbf7d0')" style="width:22px;height:22px;background:#bbf7d0;border-radius:4px;cursor:pointer;border:1.5px solid #e5e7eb;"></div>
+            <div onclick="wpSetHl('#bfdbfe')" style="width:22px;height:22px;background:#bfdbfe;border-radius:4px;cursor:pointer;border:1.5px solid #e5e7eb;"></div>
+            <div onclick="wpSetHl('#fecaca')" style="width:22px;height:22px;background:#fecaca;border-radius:4px;cursor:pointer;border:1.5px solid #e5e7eb;"></div>
+            <div onclick="wpSetHl('#e9d5ff')" style="width:22px;height:22px;background:#e9d5ff;border-radius:4px;cursor:pointer;border:1.5px solid #e5e7eb;"></div>
+            <div onclick="wpSetHl('')" style="width:22px;height:22px;background:#fff;border-radius:4px;cursor:pointer;border:1.5px solid #e5e7eb;font-size:9px;display:flex;align-items:center;justify-content:center;color:#9ca3af;">&#x2715;</div>
+          </div>
+        </div>
+        <!-- Text colour -->
+        <div style="position:relative;display:inline-flex;border-left:1px solid #e5e7eb;">
+          <button class="wp-tb-btn" onclick="wpApplyTextColor()" title="Text Color" id="wp-tc-btn" style="padding:5px 9px;font-size:13px;font-weight:700;">A<span id="wp-tc-bar" style="display:block;height:3px;background:#dc2626;border-radius:2px;margin-top:1px;"></span></button>
+          <button class="wp-tb-btn" onclick="wpShowTcPicker(event)" style="padding:5px 4px;font-size:10px;border:none;border-left:1px solid #e5e7eb;">&#x25BE;</button>
+          <div id="wp-tc-picker" style="display:none;position:absolute;top:34px;left:0;background:#fff;border:1.5px solid #e5e7eb;border-radius:8px;padding:6px;box-shadow:0 4px 16px rgba(0,0,0,.15);z-index:200;flex-wrap:wrap;gap:4px;width:120px;">
+            <div onclick="wpSetTc('#111827')" style="width:22px;height:22px;background:#111827;border-radius:4px;cursor:pointer;"></div>
+            <div onclick="wpSetTc('#dc2626')" style="width:22px;height:22px;background:#dc2626;border-radius:4px;cursor:pointer;"></div>
+            <div onclick="wpSetTc('#2563eb')" style="width:22px;height:22px;background:#2563eb;border-radius:4px;cursor:pointer;"></div>
+            <div onclick="wpSetTc('#16a34a')" style="width:22px;height:22px;background:#16a34a;border-radius:4px;cursor:pointer;"></div>
+            <div onclick="wpSetTc('#7c3aed')" style="width:22px;height:22px;background:#7c3aed;border-radius:4px;cursor:pointer;"></div>
+            <div onclick="wpSetTc('#ea580c')" style="width:22px;height:22px;background:#ea580c;border-radius:4px;cursor:pointer;"></div>
+            <div onclick="wpSetTc('#0891b2')" style="width:22px;height:22px;background:#0891b2;border-radius:4px;cursor:pointer;"></div>
+            <div onclick="wpSetTc('#be185d')" style="width:22px;height:22px;background:#be185d;border-radius:4px;cursor:pointer;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wp-divider"></div>
+
+      <!-- Paragraph alignment -->
+      <div class="wp-tb-group">
+        <button class="wp-tb-btn" onclick="wpExec('justifyLeft')"   title="Left"    style="padding:5px 9px;font-size:14px;">&#x2261; <span style="font-size:9px;">&#x2304;</span></button>
+        <button class="wp-tb-btn" onclick="wpExec('justifyCenter')" title="Center"  style="padding:5px 9px;font-size:14px;border-left:1px solid #e5e7eb;">&#x2630; <span style="font-size:9px;">&#x2304;</span></button>
+        <button class="wp-tb-btn" onclick="wpExec('justifyRight')"  title="Right"   style="padding:5px 9px;font-size:14px;border-left:1px solid #e5e7eb;">&#x2261; <span style="font-size:9px;">&#x2304;</span></button>
+        <button class="wp-tb-btn" onclick="wpExec('justifyFull')"   title="Justify" style="padding:5px 9px;font-size:14px;border-left:1px solid #e5e7eb;">&#x2630;</button>
+      </div>
+
+    </div><!-- /toolbar -->
+
+    <!-- ══ EDITOR CANVAS ══ -->
+    <div style="background:#e8eaed;padding:20px 0 28px;position:relative;min-height:560px;border-radius:0 0 12px 12px;">
+
+      <!-- नेपाली / English / Mic controls -->
+      <div style="position:absolute;top:12px;right:20px;display:flex;align-items:center;gap:8px;z-index:20;">
+        <button id="wp-lang-np" onclick="wpSetLang('nepali')" style="border:2px solid #111;border-radius:50px;padding:5px 15px;font-size:13px;font-weight:700;font-family:var(--font-body);cursor:pointer;background:#fff;color:#111;transition:all .13s;" title="Type in Romanized Nepali">&#x928;&#x947;&#x92A;&#x93E;&#x932;&#x940;</button>
+        <button id="wp-lang-en" onclick="wpSetLang('english')" style="border:2px solid #111;border-radius:50px;padding:5px 15px;font-size:13px;font-weight:700;font-family:var(--font-body);cursor:pointer;background:#111;color:#fff;transition:all .13s;" title="Type in English">English</button>
+        <button id="wp-mic-btn" onclick="wpToggleMic()" style="width:38px;height:38px;border-radius:50%;background:#dc2626;border:none;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(220,38,38,.4);transition:background .13s;" title="Voice input">&#x1F3A4;</button>
+      </div>
+
+      <!-- Paper page -->
+      <div style="max-width:720px;margin:0 auto;position:relative;">
+
+        <!-- Placeholder -->
+        <div id="wp-placeholder" style="position:absolute;top:22px;left:30px;right:30px;color:#9ca3af;font-size:14px;font-style:italic;pointer-events:none;z-index:1;line-height:1.6;">
+          Type in Romanized Nepali (e.g., &#x2018;namaste&#x2019;) and press space to convert...
+        </div>
+
+        <!-- Suggestions dropdown -->
+        <div id="wp-sugg-box" style="display:none;position:absolute;background:#fff;border:1.5px solid #e5e7eb;border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,.15);min-width:200px;overflow:hidden;z-index:50;"></div>
+
+        <!-- Editor -->
+        <div id="wp-editor"
+          contenteditable="true"
+          spellcheck="false"
+          style="background:#fff;min-height:560px;padding:22px 30px;font-family:'Mukta',sans-serif;font-size:16px;line-height:1.85;outline:none;color:#111827;box-shadow:0 2px 16px rgba(0,0,0,.10);position:relative;z-index:2;"
+          oninput="wpOnInput(event)"
+          onkeydown="wpOnKeyDown(event)"
+          onmouseup="wpToolbarSync()"
+          onfocus="wpToolbarSync()"></div>
+      </div>
+
+      <!-- Autosave status -->
+      <div id="wp-autosave" style="text-align:center;margin-top:8px;font-size:11px;color:#9ca3af;min-height:16px;"></div>
+    </div>
+
+  </div><!-- /.card -->
+
   <style>
-    #wp-editor:empty::before { content: attr(placeholder); color: var(--text-muted); pointer-events: none; }
-    .wp-btn { padding: 4px 10px; font-size: 12px; font-family: var(--font-body); background: #fff; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: background .15s; }
-    .wp-btn:hover { background: var(--blue-light); }
-    .wp-clear:hover { background: #fde8e8; }
+    .wp-tb-group { display:inline-flex; align-items:stretch; border:1.5px solid #d1d5db; border-radius:7px; overflow:hidden; background:#fff; }
+    .wp-tb-btn   { background:#fff; border:none; cursor:pointer; font-family:var(--font-body); color:#374151; transition:background .12s; display:inline-flex; align-items:center; justify-content:center; }
+    .wp-tb-btn:hover { background:#f3f4f6; }
+    .wp-tb-btn.wp-active { background:#dbeafe; color:#1d4ed8; }
+    .wp-divider  { width:1px; height:30px; background:#d1d5db; margin:0 2px; }
+    .wp-sugg-item { display:flex; align-items:center; gap:8px; padding:7px 14px; cursor:pointer; font-size:15px; border-bottom:1px solid #f3f4f6; }
+    .wp-sugg-item:last-child { border-bottom:none; }
+    .wp-sugg-item:hover, .wp-sugg-item.wp-si-active { background:#eff6ff; }
+    .wp-sugg-header { padding:5px 14px 3px; background:#f8f9fa; display:flex; align-items:center; justify-content:space-between; }
+    @keyframes wp-mic-pulse { 0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.5)} 50%{box-shadow:0 0 0 10px rgba(220,38,38,0)} }
   </style>
+
   <div class="other-tools-strip" id="wordproc-tools-strip"></div>
 </div>
 
-<!-- ===== IMAGE CONVERTER ===== -->
+<!-- ===== IMAGE CONVERTER<!-- ===== IMAGE CONVERTER ===== -->
 <div id="sec-imgconv" class="section">
   <div class="page-header">
     <h1>🖼️ Image Converter</h1>
@@ -4550,9 +5258,25 @@ function showSection(id) {
   });
   navCloseDrop();
   window.scrollTo(0, 0);
+  // Persist active section so refresh restores it
+  try { localStorage.setItem('nk_active_section', id); } catch(e) {}
   if (id === 'patro') { setTimeout(initPatro, 50); }
   if (id === 'gold' && !_goldPriceLoaded) { setTimeout(fetchGoldPrice, 100); }
 }
+
+// Restore last active section on page load
+document.addEventListener('DOMContentLoaded', function() {
+  var validSections = ['home','unicode','preeti','emi','land','date','age','patro',
+    'wordcount','tax','gold','forex','salary','design','fonts','wordproc',
+    'paraphrase','imgconv','textfmt','pdf'];
+  try {
+    var last = localStorage.getItem('nk_active_section');
+    if (last && validSections.indexOf(last) !== -1) {
+      showSection(last);
+      return;
+    }
+  } catch(e) {}
+});
 
 // Close all dropdowns
 function navCloseDrop() {
@@ -5051,271 +5775,1020 @@ function getSuggestions(typed, maxCount) {
 var _liveMode = true;
 var _suggIdx  = -1;
 
-function toggleUnicodeMode() {
-  _liveMode = !_liveMode;
-  var btn = document.getElementById('unicodeModeBtn');
-  if (btn) btn.textContent = _liveMode ? '⚡ Live Replace' : '👁 Preview';
+// ── Usage limits ─────────────────────────────────────────────────────────────
+// Limits per plan per day (stored in localStorage, reset at midnight)
+var UC_LIMITS = {
+  free:  { words: 300, minutes: 10 },
+  basic: { words: Infinity, minutes: 120 },
+  pro:   { words: Infinity, minutes: 300 }
+};
+var _ucUsageKey   = 'nc_uc_usage';
+var _ucTimerIntvl = null;
+var _ucSessionStart = null; // Date.now() when session started
+var _ucOnline     = navigator.onLine;
+
+function _ucGetPlan() {
+  try {
+    var u = JSON.parse(localStorage.getItem('nc_user') || 'null');
+    return (u && u.plan) ? u.plan : 'free';
+  } catch(e) { return 'free'; }
 }
 
-// ── INPUT HANDLER ─────────────────────────────────────────────────────────────
-// ── BACKSPACE TRACKING ────────────────────────────────────────────────────────
-// Tracks the last converted word so double-backspace can un-convert it.
-// When user presses Space/Enter, we record: { roman, nepali, start, end }
-// On first backspace: if cursor is right after a converted word → undo it
-// (restore roman text and show suggestions). This matches changathi.com behaviour.
-var _lastConverted = null;  // { roman, nepali, start }
-var _bsCount       = 0;     // consecutive backspace count at same position
+function _ucGetUsage() {
+  var today = new Date().toISOString().slice(0,10);
+  try {
+    var raw = JSON.parse(localStorage.getItem(_ucUsageKey) || '{}');
+    if (raw.date !== today) return { date: today, words: 0, seconds: 0 };
+    return raw;
+  } catch(e) { return { date: today, words: 0, seconds: 0 }; }
+}
 
-function handleUnicodeInput(e) {
-  var ta  = e.target;
-  var val = ta.value;
-  var pos = ta.selectionStart;
+function _ucSaveUsage(u) {
+  try { localStorage.setItem(_ucUsageKey, JSON.stringify(u)); } catch(e) {}
+}
 
-  // Char count
-  var cc = document.getElementById('unicodeCharCount');
-  if (cc) cc.textContent = val.length + ' chars';
+function _ucGetLimit() {
+  var plan = _ucGetPlan();
+  return UC_LIMITS[plan] || UC_LIMITS.free;
+}
 
-  // Extract current word being typed (back to last space/newline)
-  var start = pos;
-  while (start > 0 && val[start - 1] !== ' ' && val[start - 1] !== '\n') start--;
-  var word = val.slice(start, pos).trim();
+function _ucWordsUsed() { return _ucGetUsage().words; }
+function _ucSecsUsed()  { return _ucGetUsage().seconds; }
 
-  // Show suggestions whenever word has 2+ chars
-  if (word.length >= 2) {
-    _showSuggestions(ta, getSuggestions(word, 6), start, pos);
-  } else {
-    _hideSuggestions();
+function _ucAddWord() {
+  var u = _ucGetUsage(); u.words++; _ucSaveUsage(u); _ucUpdateBadge();
+}
+
+function _ucStartTimer() {
+  if (_ucTimerIntvl) return;
+  _ucSessionStart = Date.now();
+  _ucTimerIntvl = setInterval(function() {
+    var u = _ucGetUsage(); u.seconds++; _ucSaveUsage(u); _ucUpdateBadge();
+    // Check limit
+    var lim = _ucGetLimit();
+    if (u.seconds >= lim.minutes * 60) { _ucBlockSession(); }
+  }, 1000);
+}
+
+function _ucStopTimer() {
+  if (_ucTimerIntvl) { clearInterval(_ucTimerIntvl); _ucTimerIntvl = null; }
+}
+
+function _ucUpdateBadge() {
+  if (_ucOnline) {
+    // Online = unlimited, show Online badge, no blink
+    var badge = document.getElementById('uc-mode-badge');
+    var limit = document.getElementById('uc-limit-badge');
+    var label = document.getElementById('uc-mode-label');
+    if (badge) { badge.style.background='#14532d'; badge.style.borderColor='#166534'; }
+    if (label) label.textContent = 'Mode: Online';
+    if (limit) {
+      limit.style.display = 'none';
+    }
+    return;
   }
+  // Offline mode — show remaining
+  var lim   = _ucGetLimit();
+  var usage = _ucGetUsage();
+  var remWords = lim.words === Infinity ? null : Math.max(0, lim.words - usage.words);
+  var remSecs  = Math.max(0, lim.minutes * 60 - usage.seconds);
+  var remMins  = Math.ceil(remSecs / 60);
 
-  document.getElementById('unicode-output').textContent = val;
+  var badge = document.getElementById('uc-mode-badge');
+  var limit = document.getElementById('uc-limit-badge');
+  var label = document.getElementById('uc-mode-label');
+  var text  = document.getElementById('uc-limit-text');
+
+  if (badge) { badge.style.background='#1e293b'; badge.style.borderColor='#334155'; }
+  if (label) label.textContent = 'Mode: Offline';
+
+  if (limit) {
+    limit.style.display = '';
+    var isLow = (remWords !== null && remWords < 50) || remMins < 3;
+    limit.classList.toggle('uc-limit-blink', isLow);
+    if (text) {
+      if (remWords !== null) {
+        text.textContent = 'Remaining word=' + remWords + ' or Minutes=' + remMins + ' min';
+      } else {
+        text.textContent = 'Remaining Minutes=' + remMins + ' min';
+      }
+    }
+    // Exhausted?
+    if ((remWords !== null && remWords <= 0) || remSecs <= 0) {
+      _ucBlockSession();
+    }
+  }
 }
 
-// ── KEY HANDLER ───────────────────────────────────────────────────────────────
-function handleUnicodeKey(e) {
-  var ta    = document.getElementById('unicode-input');
+function _ucBlockSession() {
+  _ucStopTimer();
+  var ed = document.getElementById('unicode-editor');
+  if (ed) ed.contentEditable = 'false';
+  showToast('⏱ Daily limit reached. Upgrade your plan for more.', 4000);
+  var text = document.getElementById('uc-limit-text');
+  if (text) text.textContent = 'Limit reached — Upgrade plan';
+  var limit = document.getElementById('uc-limit-badge');
+  if (limit) { limit.style.background='#fef2f2'; limit.style.borderColor='#dc2626'; limit.style.color='#dc2626'; limit.classList.add('uc-limit-blink'); }
+}
+
+function _ucCheckOnline() {
+  _ucOnline = navigator.onLine;
+  _ucUpdateBadge();
+  if (!_ucOnline) _ucStartTimer();
+  else _ucStopTimer();
+}
+
+window.addEventListener('online',  _ucCheckOnline);
+window.addEventListener('offline', _ucCheckOnline);
+
+// ── Toolbar helpers ───────────────────────────────────────────────────────────
+function ucExec(cmd, val) {
+  var ed = document.getElementById('unicode-editor');
+  if (ed) ed.focus();
+  document.execCommand(cmd, false, val || null);
+  ucToolbarSync();
+}
+function ucFont(f) {
+  var ed = document.getElementById('unicode-editor');
+  if (!ed || !f) return;
+  ed.focus(); ed.style.fontFamily = f;
+  document.execCommand('fontName', false, f);
+}
+function ucFontSize(pt) {
+  var ed = document.getElementById('unicode-editor');
+  if (ed) ed.style.fontSize = parseInt(pt, 10) + 'px';
+}
+var _ucFontSize = 16;
+function ucGrowFont() {
+  var steps=[8,9,10,11,12,14,16,18,20,24,28,32,36];
+  _ucFontSize = steps.find(function(x){return x>_ucFontSize;})||36;
+  var s=document.getElementById('uc-size-sel'); if(s) s.value=_ucFontSize;
+  ucFontSize(_ucFontSize);
+}
+function ucShrinkFont() {
+  var steps=[8,9,10,11,12,14,16,18,20,24,28,32,36];
+  var n=8; steps.forEach(function(x){if(x<_ucFontSize)n=x;});
+  _ucFontSize=n;
+  var s=document.getElementById('uc-size-sel'); if(s) s.value=n;
+  ucFontSize(n);
+}
+function ucToolbarSync() {
+  [['uc-btn-bold','bold'],['uc-btn-italic','italic'],['uc-btn-underline','underline']].forEach(function(p){
+    var btn=document.getElementById(p[0]);
+    if(btn) btn.classList.toggle('wp-active', !!document.queryCommandState(p[1]));
+  });
+}
+
+// ── Mode toggle (online/offline force) ───────────────────────────────────────
+function ucToggleMode() {
+  _ucOnline = !_ucOnline;
+  _ucUpdateBadge();
+  if (!_ucOnline) _ucStartTimer(); else _ucStopTimer();
+}
+function toggleUnicodeMode() { ucToggleMode(); } // compat alias
+
+// ── Word count ─────────────────────────────────────────────────────────────────
+function _ucUpdateCount() {
+  var ed  = document.getElementById('unicode-editor');
+  var el2 = document.getElementById('unicodeCharCount');
+  if (!ed || !el2) return;
+  var text  = ed.innerText || '';
+  var words = text.trim() ? text.trim().split(/\s+/).filter(Boolean).length : 0;
+  var chars = text.replace(/\s/g,'').length;
+  el2.textContent = words + ' words \u00b7 ' + chars + ' chars';
+}
+
+// ── Suggestion box ────────────────────────────────────────────────────────────
+var _ucSuggIdx  = -1;
+var _ucTyping   = '';
+var _ucLastConv = null;
+
+function _ucShowSugg(word) {
+  var suggs = getSuggestions(word, 6);
   var box   = document.getElementById('suggestion-box');
-  var items = box ? box.querySelectorAll('.suggestion-item') : [];
-  var open  = box && box.classList.contains('show') && items.length > 0;
-
-  // ── Arrow navigation in suggestion box ───────────────────────────────────
-  if (open && e.key === 'ArrowDown') {
-    e.preventDefault();
-    _suggIdx = Math.min(_suggIdx + 1, items.length - 1);
-    for (var i = 0; i < items.length; i++) items[i].classList.toggle('focused', i === _suggIdx);
-    return;
-  }
-  if (open && e.key === 'ArrowUp') {
-    e.preventDefault();
-    _suggIdx = Math.max(_suggIdx - 1, 0);
-    for (var i = 0; i < items.length; i++) items[i].classList.toggle('focused', i === _suggIdx);
-    return;
-  }
-
-  // ── Enter picks focused suggestion ───────────────────────────────────────
-  if (open && e.key === 'Enter' && _suggIdx >= 0) {
-    e.preventDefault();
-    var focused = items[_suggIdx];
-    if (focused) _applyItem(ta, focused.dataset.nepali);
-    return;
-  }
-
-  // ── Escape hides box ──────────────────────────────────────────────────────
-  if (e.key === 'Escape') { _hideSuggestions(); return; }
-
-  // ── BACKSPACE: double-backspace un-converts last word ─────────────────────
-  if (e.key === 'Backspace') {
-    var val = ta.value;
-    var pos = ta.selectionStart;
-
-    // Track consecutive backspaces at end of a converted word
-    if (_lastConverted && pos === _lastConverted.start + _lastConverted.nepali.length) {
-      _bsCount++;
-      if (_bsCount >= 2) {
-        // ── Un-convert: replace nepali back with roman ──────────────────
-        e.preventDefault();
-        var lc     = _lastConverted;
-        var before = val.slice(0, lc.start);
-        var after  = val.slice(lc.start + lc.nepali.length);
-        // Remove trailing space that was added during conversion
-        if (after.charAt(0) === ' ') after = after.slice(1);
-        var newVal = before + lc.roman + after;
-        ta.value   = newVal;
-        var newPos = lc.start + lc.roman.length;
-        ta.setSelectionRange(newPos, newPos);
-        document.getElementById('unicode-output').textContent = newVal;
-        var cc2 = document.getElementById('unicodeCharCount');
-        if (cc2) cc2.textContent = newVal.length + ' chars';
-        _lastConverted = null;
-        _bsCount       = 0;
-        // Show suggestions for the restored roman word
-        var suggs = getSuggestions(lc.roman, 6);
-        _showSuggestions(ta, suggs, lc.start, newPos);
-        return;
-      }
-    } else {
-      // Not at a converted word boundary — reset counter
-      _bsCount = 0;
-      // Still show suggestions for whatever partial word is left (fires via oninput)
+  var ed    = document.getElementById('unicode-editor');
+  if (!box || !ed || !suggs.length) { _hideSuggestions(); return; }
+  var sel = window.getSelection();
+  if (sel && sel.rangeCount) {
+    var rect   = sel.getRangeAt(0).getBoundingClientRect();
+    var edRect = ed.getBoundingClientRect();
+    if (rect.top) {
+      box.style.left = Math.max(0, rect.left - edRect.left) + 'px';
+      box.style.top  = (rect.bottom - edRect.top + 2) + 'px';
     }
-    // Let default backspace happen, oninput will handle suggestions
-    return;
   }
-
-  // Reset backspace counter on any other key
-  _bsCount = 0;
-
-  // ── Space / Enter in live mode → convert word in-place ───────────────────
-  if ((e.key === ' ' || e.key === 'Enter') && _liveMode) {
-    var val   = ta.value;
-    var pos   = ta.selectionStart;
-    var start = pos;
-    while (start > 0 && val[start - 1] !== ' ' && val[start - 1] !== '\n') start--;
-    var word = val.slice(start, pos).trim();
-
-    if (word.length > 0) {
-      var exact     = NP_EXACT[word.toLowerCase()];
-      var converted = exact || romanToUnicode(word);
-      if (converted && converted !== word) {
-        e.preventDefault();
-        var sep    = e.key === 'Enter' ? '\n' : ' ';
-        var newVal = val.slice(0, start) + converted + sep + val.slice(pos);
-        ta.value   = newVal;
-        var newPos = start + converted.length + 1;
-        ta.setSelectionRange(newPos, newPos);
-        document.getElementById('unicode-output').textContent = newVal;
-        _hideSuggestions();
-        // Record for double-backspace un-convert
-        _lastConverted = { roman: word, nepali: converted + sep.replace('\n',''), start: start };
-        _bsCount       = 0;
-        var cc3 = document.getElementById('unicodeCharCount');
-        if (cc3) cc3.textContent = newVal.length + ' chars';
-        return;
-      }
-    }
-    _lastConverted = null;
-    _hideSuggestions();
-  } else {
-    // Any non-space/backspace key clears the un-convert record
-    if (e.key !== 'Backspace') _lastConverted = null;
-  }
-}
-
-// ── SUGGESTION UI ─────────────────────────────────────────────────────────────
-function _showSuggestions(ta, suggs, wStart, wEnd) {
-  var box = document.getElementById('suggestion-box');
-  if (!suggs.length || !box) { _hideSuggestions(); return; }
-  box.innerHTML = '';
-  for (var k = 0; k < suggs.length; k++) {
-    (function(s, idx) {
-      var item = document.createElement('div');
-      item.className         = 'suggestion-item';
-      item.dataset.nepali    = s.nepali;
-      item.dataset.isEnglish = s.tag === 'english' ? '1' : '0';
-      // Pre-highlight first item — matches changathi.com behaviour
-      if (idx === 0) item.classList.add('focused');
-      var tagHTML = '';
-      if (s.tag === 'phonetic') tagHTML = '<span class="sug-tag sug-tag-ph">🔤</span>';
-      if (s.tag === 'close')    tagHTML = '<span class="sug-tag sug-tag-cl">≈</span>';
-      if (s.tag === 'english')  tagHTML = '<span class="sug-tag sug-tag-en">EN</span>';
-      item.innerHTML =
-        '<span class="sug-nep">' + s.nepali + '</span>' +
-        '<span class="sug-rom">' + s.roman + tagHTML + '</span>';
-      item.addEventListener('mousedown', function(ev) {
-        ev.preventDefault();
-        _applyItem(ta, s.nepali);
-      });
-      box.appendChild(item);
-    })(suggs[k], k);
-  }
-  // Pre-select index 0 so Enter immediately picks first suggestion
-  _suggIdx = 0;
-  box.classList.add('show');
+  _ucSuggIdx = -1;
+  var h = '<div style="padding:5px 14px 3px;background:#f8f9fa;display:flex;justify-content:space-between;border-bottom:1px solid #f3f4f6;">'
+        + '<span style="font-size:11px;color:#6b7280;">Suggestions</span>'
+        + '<span style="font-size:10px;color:#9ca3af;">ESC to close</span></div>';
+  suggs.forEach(function(s, i) {
+    var badge = i === 0
+      ? '<span style="margin-left:auto;background:#e0e7ff;color:#4338ca;border-radius:4px;padding:1px 7px;font-size:10px;font-weight:700;">Space</span>'
+      : '<span style="margin-left:auto;color:#d1d5db;font-size:11px;">' + (i+1) + '</span>';
+    h += '<div class="uc-sugg-item' + (i===0?' uc-si-active':'') + '" onmousedown="event.preventDefault();_ucPickSugg(' + i + ',\'' + word + '\')" style="display:flex;align-items:center;gap:8px;padding:7px 14px;cursor:pointer;border-bottom:1px solid #f9fafb;">'
+       + '<span style="color:#9ca3af;font-size:12px;min-width:14px;">' + (i+1) + '.</span>'
+       + '<span style="font-family:Mukta,sans-serif;font-size:15px;">' + s.nepali + '</span>'
+       + badge + '</div>';
+  });
+  box.innerHTML = h;
+  box.style.display = 'block';
 }
 
 function _hideSuggestions() {
   var box = document.getElementById('suggestion-box');
-  if (box) { box.classList.remove('show'); box.innerHTML = ''; }
-  _suggIdx = -1;
+  if (box) box.style.display = 'none';
+  _ucSuggIdx = -1;
 }
 
-function _applyItem(ta, nepali) {
-  var val   = ta.value;
-  var pos   = ta.selectionStart;
-  var start = pos;
-  while (start > 0 && val[start - 1] !== ' ' && val[start - 1] !== '\n') start--;
-  // Capture the roman word being replaced (for double-backspace undo)
-  var roman  = val.slice(start, pos).trim();
-  var newVal = val.slice(0, start) + nepali + ' ' + val.slice(pos);
-  ta.value   = newVal;
-  var newPos = start + nepali.length + 1;
-  ta.setSelectionRange(newPos, newPos);
-  document.getElementById('unicode-output').textContent = newVal;
-  var cc = document.getElementById('unicodeCharCount');
-  if (cc) cc.textContent = newVal.length + ' chars';
-  // Record for double-backspace un-convert
-  _lastConverted = { roman: roman, nepali: nepali + ' ', start: start };
-  _bsCount = 0;
-  _hideSuggestions();
-  ta.focus();
+function _ucReplaceWord(roman, nepali) {
+  var sel = window.getSelection();
+  if (!sel || !sel.rangeCount) return;
+  var range = sel.getRangeAt(0);
+  var node  = range.startContainer;
+  if (node.nodeType !== 3) return;
+  var txt = node.textContent, pos = range.startOffset;
+  var idx = txt.slice(0, pos).lastIndexOf(roman);
+  if (idx < 0) return;
+  range.setStart(node, idx); range.setEnd(node, idx + roman.length);
+  sel.removeAllRanges(); sel.addRange(range);
+  document.execCommand('insertText', false, nepali);
 }
 
-// ── PUBLIC + COMPAT ───────────────────────────────────────────────────────────
+function _ucPickSugg(idx, typed) {
+  var word  = typed || _ucTyping;
+  var suggs = getSuggestions(word, 6);
+  if (!suggs[idx]) return;
+  var nepali = suggs[idx].nepali;
+  _ucReplaceWord(word, nepali);
+  _ucLastConv = { roman: word, nepali: nepali };
+  _ucTyping = ''; _hideSuggestions();
+  document.execCommand('insertText', false, ' ');
+  if (!_ucOnline) _ucAddWord();
+  _ucUpdateCount();
+}
+
+// ── Input handler ─────────────────────────────────────────────────────────────
+function handleUnicodeInput(e) {
+  _ucUpdateCount();
+  // Check if offline limit exhausted
+  if (!_ucOnline) {
+    var lim = _ucGetLimit(), u = _ucGetUsage();
+    if ((lim.words !== Infinity && u.words >= lim.words) || u.seconds >= lim.minutes * 60) {
+      _ucBlockSession(); return;
+    }
+  }
+  var ed = document.getElementById('unicode-editor');
+  if (!ed) return;
+  var sel = window.getSelection();
+  if (!sel || !sel.rangeCount) return;
+  var range  = sel.getRangeAt(0);
+  var node   = range.startContainer;
+  if (node.nodeType !== 3) return;
+  var pos    = range.startOffset;
+  var before = node.textContent.slice(0, pos);
+  var m      = before.match(/([a-zA-Z]+)$/);
+  var word   = m ? m[1] : '';
+  if (word !== _ucTyping) {
+    _ucTyping = word; _ucSuggIdx = -1;
+    if (word.length >= 2) _ucShowSugg(word);
+    else _hideSuggestions();
+  }
+}
+
+// ── Key handler ───────────────────────────────────────────────────────────────
+function handleUnicodeKey(e) {
+  var box     = document.getElementById('suggestion-box');
+  var boxOpen = box && box.style.display !== 'none';
+
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    document.execCommand('insertText', false, '\u00a0\u00a0\u00a0\u00a0');
+    return;
+  }
+
+  if ((e.key === ' ' || e.key === 'Enter') && _ucTyping) {
+    e.preventDefault();
+    var suggs  = getSuggestions(_ucTyping, 6);
+    var pick   = suggs[_ucSuggIdx >= 0 ? _ucSuggIdx : 0];
+    var nepali = pick ? pick.nepali : (romanToUnicode(_ucTyping) || _ucTyping);
+    _ucReplaceWord(_ucTyping, nepali);
+    _ucLastConv = { roman: _ucTyping, nepali: nepali };
+    _ucTyping = ''; _hideSuggestions();
+    if (e.key === ' ') document.execCommand('insertText', false, ' ');
+    else document.execCommand('insertParagraph', false);
+    if (!_ucOnline) _ucAddWord();
+    _ucUpdateCount();
+    return;
+  }
+
+  if (boxOpen && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
+    e.preventDefault();
+    var items = box.querySelectorAll('.uc-sugg-item');
+    if (!items.length) return;
+    _ucSuggIdx = e.key === 'ArrowDown'
+      ? Math.min(_ucSuggIdx + 1, items.length - 1)
+      : Math.max(_ucSuggIdx - 1, 0);
+    items.forEach(function(it, i) { it.classList.toggle('uc-si-active', i === _ucSuggIdx); });
+    return;
+  }
+
+  if (e.key === 'Escape') { _hideSuggestions(); _ucTyping = ''; return; }
+
+  if (e.key === 'Backspace' && _ucLastConv) {
+    var sel2 = window.getSelection();
+    if (sel2 && sel2.rangeCount) {
+      var rng = sel2.getRangeAt(0), nd = rng.startContainer;
+      if (nd.nodeType === 3) {
+        var txt = nd.textContent, p = rng.startOffset, np = _ucLastConv.nepali;
+        var hasSp = txt.slice(0,p).endsWith(np+' '), hasNp = txt.slice(0,p).endsWith(np);
+        if (hasSp || hasNp) {
+          e.preventDefault();
+          var del = np.length + (hasSp ? 1 : 0);
+          rng.setStart(nd, p-del); rng.setEnd(nd, p);
+          sel2.removeAllRanges(); sel2.addRange(rng);
+          document.execCommand('insertText', false, _ucLastConv.roman);
+          _ucTyping = _ucLastConv.roman; _ucLastConv = null;
+          _ucShowSugg(_ucTyping); return;
+        }
+      }
+    }
+    _ucLastConv = null;
+  }
+}
+
+// ── Actions ───────────────────────────────────────────────────────────────────
+function clearUnicode() {
+  var ed = document.getElementById('unicode-editor');
+  if (ed) { ed.innerHTML = ''; }
+  var ta = document.getElementById('unicode-input');
+  if (ta) ta.value = '';
+  _hideSuggestions(); _ucTyping = ''; _ucLastConv = null;
+  _ucUpdateCount();
+  showToast('\u2705 Cleared!');
+}
+
+function ucCopyAll() {
+  var ed = document.getElementById('unicode-editor');
+  if (!ed) return;
+  var rng = document.createRange();
+  rng.selectNodeContents(ed);
+  var sel = window.getSelection();
+  sel.removeAllRanges(); sel.addRange(rng);
+  document.execCommand('copy');
+  sel.removeAllRanges();
+  showToast('\u2705 Copied to clipboard!');
+}
+function copyUnicodeText() { ucCopyAll(); } // compat
+
+function ucPrint() {
+  var ed = document.getElementById('unicode-editor');
+  if (!ed) return;
+  var w = window.open('', '_blank');
+  var printHtml = '<!DOCTYPE html><html><head><title>Nepali Document<\/title>'
+    + '<link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600&display=swap" rel="stylesheet">'
+    + '<style>body{font-family:Mukta,sans-serif;font-size:16px;line-height:1.85;padding:40px 60px;max-width:760px;margin:0 auto;}<\/style>'
+    + '<\/head><body>' + ed.innerHTML + '<\/body><\/html>';
+  w.document.write(printHtml);
+  w.document.close(); w.focus(); w.print(); w.close();
+}
+
+function ucDownloadDocx() {
+  var ed = document.getElementById('unicode-editor');
+  if (!ed) return;
+  var docHtml = '<!DOCTYPE html><html><head><meta charset="UTF-8">'
+    + '<link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600&display=swap" rel="stylesheet">'
+    + '<style>body{font-family:Mukta,sans-serif;font-size:16px;line-height:1.85;padding:50px 70px;max-width:800px;margin:0 auto;color:#111;}<\/style>'
+    + '<\/head><body>' + ed.innerHTML + '<\/body><\/html>';
+  var blob = new Blob(['\uFEFF' + docHtml], { type: 'application/msword' });
+  var url  = URL.createObjectURL(blob);
+  var a    = document.createElement('a');
+  a.href = url; a.download = 'nepali-document.doc';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('\u2705 Document downloaded!');
+}
+
+// ── Resize handle ─────────────────────────────────────────────────────────────
+(function initUcResize() {
+  document.addEventListener('DOMContentLoaded', function() {
+    var handle = document.getElementById('uc-resize-handle');
+    var ed     = document.getElementById('unicode-editor');
+    if (!handle || !ed) return;
+    var dragging = false, startY, startH;
+    handle.addEventListener('mousedown', function(e) {
+      dragging = true; startY = e.clientY; startH = ed.offsetHeight;
+      e.preventDefault();
+    });
+    document.addEventListener('mousemove', function(e) {
+      if (!dragging) return;
+      ed.style.minHeight = Math.max(200, startH + e.clientY - startY) + 'px';
+    });
+    document.addEventListener('mouseup', function() { dragging = false; });
+  });
+})();
+
+// ── Close sugg on outside click ───────────────────────────────────────────────
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('#suggestion-box') && !e.target.closest('#unicode-editor')) {
+    _hideSuggestions();
+  }
+});
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  // Add sugg item styles
+  var st = document.createElement('style');
+  st.textContent = '.uc-sugg-item:hover,.uc-si-active{background:#eff6ff!important;}';
+  document.head.appendChild(st);
+  // Init online/offline state
+  _ucCheckOnline();
+  // Start timer when editing if offline
+  var ed = document.getElementById('unicode-editor');
+  if (ed) {
+    ed.addEventListener('focus', function() { if (!_ucOnline) _ucStartTimer(); });
+    ed.addEventListener('blur',  function() { _ucStopTimer(); });
+  }
+  _ucUpdateBadge();
+  _ucUpdateCount();
+});
+
+// ── Exports ───────────────────────────────────────────────────────────────────
 window.toggleUnicodeMode  = toggleUnicodeMode;
 window.handleUnicodeInput = handleUnicodeInput;
 window.handleUnicodeKey   = handleUnicodeKey;
+window.clearUnicode       = clearUnicode;
+window.copyUnicodeText    = copyUnicodeText;
 window.hideSuggestions    = _hideSuggestions;
-var suggestionIndex = -1;
-
-function copyUnicodeText() {
-  var ta = document.getElementById('unicode-input');
-  if (!ta) return;
-  navigator.clipboard.writeText(ta.value).then(function() {
-    showToast('Copied to clipboard!');
-  }).catch(function() { ta.select(); document.execCommand('copy'); showToast('Copied!'); });
-}
-
-function clearUnicode() {
-  var ta = document.getElementById('unicode-input');
-  if (ta) ta.value = '';
-  var out = document.getElementById('unicode-output');
-  if (out) out.textContent = '';
-  _hideSuggestions();
-  var cc = document.getElementById('unicodeCharCount');
-  if (cc) cc.textContent = '';
-}
-
-document.addEventListener('click', function(e) {
-  if (!e.target.closest('.suggestion-wrapper')) _hideSuggestions();
-});
+window.getSuggestions     = getSuggestions;
+window.romanToUnicode     = romanToUnicode;
+window.ucExec             = ucExec;
+window.ucFont             = ucFont;
+window.ucFontSize         = ucFontSize;
+window.ucGrowFont         = ucGrowFont;
+window.ucShrinkFont       = ucShrinkFont;
+window.ucToolbarSync      = ucToolbarSync;
+window.ucToggleMode       = ucToggleMode;
+window.ucCopyAll          = ucCopyAll;
+window.ucPrint            = ucPrint;
+window.ucDownloadDocx     = ucDownloadDocx;
+window._ucPickSugg        = _ucPickSugg;
+window._ucCheckOnline     = _ucCheckOnline;
 
 })(); // end IIFE
 
 // ===================== PREETI CONVERTER =====================
-const unicodeToPreeti = {
-  'अ':'c','आ':'cf','इ':'O','ई':'cf','उ':'pf','ऊ':'pm','ऋ':'t','ए':'P','ऐ':'Pp','ओ':'cf','औ':'cfw',
-  'क':'s','ख':'v','ग':'u','घ':'3','ङ':'^',
-  'च':'r','छ':'R','ज':'h','झ':'H','ञ':'~',
-  'ट':'6','ठ':'7','ड':'8','ढ':'9','ण':'0',
-  'त':'t','थ':'y','द':'b','ध':'w','न':'g',
-  'प':'k','फ':'km','ब':'a','भ':'e','म':'d',
-  'य':'o','र':'/','ल':';','व':'j','श':'z','ष':'if','स':'x','ह':'n',
-  'क्ष':'If','त्र':'q','ज्ञ':'1','श्र':'if/',
-  'ा':'f','ि':'l','ी':'n','ु':'=','ू':'+','े':'[','ै':'Z','ो':'fv','ौ':'fw',
-  'ं':':','ः':'M','ँ':'F',
-  '्':'\\','।':',','ॐ':'/I',
-  '०':'0','१':'!','२':'@','३':'#','४':'$','५':'%','६':'^','७':'&','८':'*','९':'(',
-};
+(function() {
+'use strict';
 
-function convertToPreeti() {
-  const input = document.getElementById('preeti-input').value;
-  let output = '';
-  for (let i = 0; i < input.length; i++) {
-    const ch = input[i];
-    output += unicodeToPreeti[ch] || ch;
+var _mode = 'u2p';
+
+function preetiSetMode(mode) {
+  _mode = mode;
+  var tu = document.getElementById('ptab-u2p');
+  var tp = document.getElementById('ptab-p2u');
+  var su = document.getElementById('preeti-u2p-section');
+  var sp = document.getElementById('preeti-p2u-section');
+  var sb = document.getElementById('preeti-subtitle');
+  if (mode === 'u2p') {
+    tu.classList.add('active');    tp.classList.remove('active');
+    su.style.display = '';         sp.style.display = 'none';
+    if (sb) sb.textContent = 'Convert Devanagari Unicode text to Preeti font encoding \u2014 edit output to correct any errors before copying';
+  } else {
+    tp.classList.add('active');    tu.classList.remove('active');
+    sp.style.display = '';         su.style.display = 'none';
+    if (sb) sb.textContent = 'Paste Preeti-encoded text on the left to convert it back to Devanagari Unicode';
   }
-  document.getElementById('preeti-output').textContent = output;
 }
 
+// ── encoding tables ──────────────────────────────────────────────────────────
+var HALANT = '\u094D';
+
+var CONS = {
+  '\u0915':'s','\u0916':'v','\u0917':'u','\u0918':'3','\u0919':'\u00AA',
+  '\u091A':'r','\u091B':'5','\u091C':'h','\u091D':'H','\u091E':'~',
+  '\u091F':'6','\u0920':'7','\u0921':'8','\u0922':'9','\u0923':'0',
+  '\u0924':'t','\u0925':'y','\u0926':'b','\u0927':'w','\u0928':'g',
+  '\u092A':'k','\u092B':'km','\u092C':'a','\u092D':'e','\u092E':'d',
+  '\u092F':'o','\u0930':'/','\u0932':'n','\u0935':'j','\u0933':'N',
+  '\u0936':'z','\u0937':'if','\u0938':';','\u0939':'x',
+};
+
+var HALF = {
+  '\u0915':'S','\u0916':'V','\u0917':'U','\u0918':'3\\','\u0919':'\u00AA\\',
+  '\u091A':'r\\','\u091B':'5\\','\u091C':'H','\u091D':'H\\','\u091E':'~',
+  '\u091F':'6\\','\u0920':'7\\','\u0921':'8\\','\u0922':'9\\','\u0923':'0\\',
+  '\u0924':'T','\u0925':'Y','\u0926':'b\\','\u0927':'W','\u0928':'G',
+  '\u092A':'K','\u092B':'\u02C6','\u092C':'A','\u092D':'e\\','\u092E':'D',
+  '\u092F':'o\\','\u0932':'N','\u0935':'j\\','\u0933':'N\\',
+  '\u0936':'Z','\u0937':'if\\','\u0938':':','\u0939':'X',
+};
+
+var MATRA = {
+  '\u093E':'f','\u093F':'l','\u0940':'L',
+  '\u0941':"'",'\u0942':'"','\u0943':'[',
+  '\u0947':']','\u0948':'}','\u094B':'f]','\u094C':'f}',
+  '\u0902':'+','\u0903':'M','\u0901':'F',
+};
+
+var IVOWEL = {
+  '\u0905':'c','\u0906':'cf','\u0907':'O','\u0908':'O{',
+  '\u0909':'p','\u090A':'pm','\u090B':'[\\',
+  '\u090F':'P',
+  '\u0910':'P]',
+  '\u0913':'cf]','\u0914':'cf}',
+};
+
+var SPECJUNCTS = {
+  '\u0915\u094D\u0937':'If',
+  '\u0924\u094D\u0930':'q',
+  '\u091C\u094D\u091E':'1',
+  '\u0926\u094D\u092F':'B',
+  '\u0915\u094D\u0924':'Qm',
+  '\u0926\u094D\u0927':'Gw',
+  '\u0926\u094D\u0935':'\u00E5',
+  '\u0936\u094D\u0930':'>',
+  '\u091F\u094D\u091F':'\u00A7',
+  '\u0921\u094D\u0921':'88',
+  '\u0919\u094D\u0917':'\u00CB',
+  '\u0919\u094D\u0915':'\u00CD',
+  '\u0926\u094D\u0926':'2',
+  '\u0926\u094D\u0930':'\u203A',
+  '\u0935\u094D\u092F':'Jo',
+  '\u0915\u094D\u0930':'qm',
+};
+
+var PUNCT = {
+  '\u0964':'.','\u0965':'..','\u0950':',\u02C6',
+  ' ':' ','\n':'\n','\t':'\t',
+  ',':',','.':'=','?':'?','!':'!',
+  '"':'"',"'":"'",'\u2018':'\u2026','\u2019':'\u00DA',
+  '\u201C':'\u201C','\u201D':'\u201D',
+  '-':'\u2013','\u2013':'\u2013','\u2014':'\u2014','\u2026':'\u2026',
+  '-':'\u2013','(':'-',')':'_',
+  '/':'\u00F7',
+};
+
+var DIGITS = {
+  '\u0966':')','\u0967':'!','\u0968':'@','\u0969':'#','\u096A':'$',
+  '\u096B':'%','\u096C':'^','\u096D':'&','\u096E':'*','\u096F':'(',
+};
+
+// ── Unicode → Preeti engine (v5 — all bugs fixed) ────────────────────────────
+function unicodeToPreeti(text) {
+  var chars = Array.from(text);
+  var n = chars.length;
+  var out = [];
+  var i = 0;
+  var _qOpen = false; // toggle for ASCII ' → …/Ú
+  while (i < n) {
+    var c = chars[i];
+    if (c === "'") { out.push(_qOpen ? '\u00DA' : '\u2026'); _qOpen=!_qOpen; i++; continue; } // ASCII ' → …/Ú toggle
+    if (PUNCT[c]  !== undefined) { out.push(PUNCT[c]);  i++; continue; }
+    if (DIGITS[c] !== undefined) { out.push(DIGITS[c]); i++; continue; }
+    if (IVOWEL[c] !== undefined) { out.push(IVOWEL[c]); i++; continue; }
+    if (CONS[c]   !== undefined) {
+      // Reph: र+्+consonant at cluster start
+      var reph = false;
+      if (c==='\u0930' && i+1<n && chars[i+1]===HALANT && i+2<n && CONS[chars[i+2]]) {
+        reph=true; i+=2; c=chars[i];
+      }
+      var parts=[]; var looping=true; var lastConsChar='';
+      while (looping && i<n && CONS[chars[i]]) {
+        var cc=chars[i];
+        var cj3=cc+(chars[i+1]||'')+(chars[i+2]||'');
+        if (i+2<n && chars[i+1]===HALANT && SPECJUNCTS[cj3]) {
+          // Special conjunct
+          parts.push(SPECJUNCTS[cj3]); lastConsChar=chars[i+2]; i+=3;
+          looping=false; // stop after conjunct — next consonant starts fresh
+        } else if (i+1<n && chars[i+1]===HALANT) {
+          if (i+2<n && chars[i+2]==='\u0930') {
+            // Subscript ra: consonant+्+र → consonant|
+            parts.push(CONS[cc]+'|'); lastConsChar='\u0930'; i+=3;
+            looping=false; // FIX: stop after sub-ra — next consonant is separate
+          } else if (i+2<n && CONS[chars[i+2]]) {
+            // Half form
+            parts.push(HALF[cc]||(CONS[cc]+'\\')); lastConsChar=cc; i+=2;
+          } else {
+            // Final halant
+            parts.push(CONS[cc]+'\\'); lastConsChar=cc; i+=2; looping=false;
+          }
+        } else {
+          parts.push(CONS[cc]); lastConsChar=cc; i+=1; looping=false;
+        }
+      }
+      var cluster=parts.join('');
+      var mc=(i<n && MATRA[chars[i]]) ? chars[i] : null;
+      if (mc) {
+        i++;
+        if (cluster==='/' && mc==='\u0941') {
+          cluster='?';             // र+ु combined glyph
+        } else if (cluster==='/' && mc==='\u0942') {
+          cluster='\u00BF';        // र+ू combined glyph
+        } else if (mc==='\u093F') {
+          cluster = (cluster==='Qm') ? 'lQm' : 'l'+cluster;  // ि prepends; क्त+ि=lQmter
+        } else if (mc==='\u0942' && cluster.slice(-2)==='km') {
+          // फ+ू: km → k"
+          cluster=cluster.slice(0,-2)+'k'+MATRA[mc];
+        } else {
+          // FIX: ण always gets inherent 'f' baked in, THEN explicit matra added
+          if (lastConsChar==='\u0923') {
+            cluster=cluster+'f'+MATRA[mc];
+          } else if (cluster==='Qm' && mc==='\\u093E') {
+            cluster='Qmf'; // क्त+ā special Preeti glyph
+          } else {
+            cluster=cluster+MATRA[mc];
+          }
+        }
+      } else {
+        // No matra: ण gets inherent 'f'
+        if (lastConsChar==='\u0923') cluster=cluster+'f';
+      }
+      if (reph) {
+        // FIX: reph '{' placed BEFORE ु (\u2019) and ू (") matras
+        if (cluster.slice(-1)==="'") {
+          cluster=cluster.slice(0,-1)+'{'+'\'';
+        } else if (cluster.slice(-1)==='"') {
+          cluster=cluster.slice(0,-1)+'{"';
+        } else {
+          cluster=cluster+'{';
+        }
+      }
+      out.push(cluster); continue;
+    }
+    if (MATRA[c] !== undefined) { out.push(MATRA[c]); i++; continue; }
+    out.push(c); i++;
+  }
+  var result = out.join('');
+  // Decimal dot between Preeti digits → '='
+  var PRDIGITS = '\\)!@#\\$%\\^&\\*\\(';
+  result = result.replace(new RegExp('([' + PRDIGITS + '])\\.([' + PRDIGITS + '])', 'g'), '$1=$2');
+  return result;
+}
+
+// ── Preeti → Unicode reverse engine ─────────────────────────────────────────
+function preetiToUnicode(text) {
+  var P2C = [
+    ['If','\u0915\u094D\u0937'],['z|','\u0936\u094D\u0930'],
+    ['Gw','\u0926\u094D\u0927'],['Gj','\u0926\u094D\u0935'],
+    ['88','\u0921\u094D\u0921'],['\u00AAu','\u0919\u094D\u0917'],
+    ['Jo','\u0935\u094D\u092F'],['qm','\u0915\u094D\u0930'],
+    ['km','\u092B'],
+    ['S','\u0915\u094D'],['v\\','\u0916\u094D'],['U','\u0917\u094D'],
+    ['3\\','\u0918\u094D'],['\u00AA\\','\u0919\u094D'],
+    ['r\\','\u091A\u094D'],['5\\','\u091B\u094D'],
+    ['H\\','\u091D\u094D'],['6\\','\u091F\u094D'],
+    ['7\\','\u0920\u094D'],['8\\','\u0921\u094D'],['9\\','\u0922\u094D'],
+    ['0\\','\u0923\u094D'],['T','\u0924\u094D'],['Y','\u0925\u094D'],
+    ['b\\','\u0926\u094D'],['W','\u0927\u094D'],['G','\u0928\u094D'],
+    ['K','\u092A\u094D'],['\u02C6','\u092B\u094D'],['a\\','\u092C\u094D'],
+    ['e\\','\u092D\u094D'],['D','\u092E\u094D'],['o\\','\u092F\u094D'],
+    ['j\\','\u0935\u094D'],['N\\','\u0933\u094D'],['Z','\u0936\u094D'],
+    ['if\\','\u0937\u094D'],[':','\u0938\u094D'],['X','\u0939\u094D'],
+    ['\u00A7','\u091F\u094D\u091F'],
+    ['s','\u0915'],['v','\u0916'],['u','\u0917'],['3','\u0918'],['\u00AA','\u0919'],
+    ['r','\u091A'],['5','\u091B'],['h','\u091C'],['H','\u091D'],['~','\u091E'],
+    ['6','\u091F'],['7','\u0920'],['8','\u0921'],['9','\u0922'],['0','\u0923'],
+    ['t','\u0924'],['y','\u0925'],['b','\u0926'],['w','\u0927'],['g','\u0928'],
+    ['k','\u092A'],['a','\u092C'],['e','\u092D'],['d','\u092E'],
+    ['o','\u092F'],['/,','\u0930\u0902'],['/','\u0930'],['n','\u0932'],
+    ['j','\u0935'],['N','\u0933'],['z','\u0936'],
+    ['if','\u0937'],[';','\u0938'],['x','\u0939'],
+    ['f]','\u094B'],['f}','\u094C'],['f','\u093E'],['l','\u093F'],
+    ['L','\u0940'],['\u2019','\u0941'],['"','\u0942'],['[','\u0943'],
+    [']','\u0947'],['}','\u0948'],['+','\u0902'],['M','\u0903'],['F','\u0901'],
+    ['cf]','\u0913'],['cf}','\u0914'],['cf','\u0906'],['O{','\u0908'],
+    ['O','\u0907'],['pm','\u090A'],['p','\u0909'],['P}','\u0910'],['P','\u090F'],
+    ['c','\u0905'],['[\\','\u090B'],
+    ['?','\u0930\u0941'],['\u00BF','\u0930\u0942'],
+    ['{','\u0930\u094D'],['|','\u094D\u0930'],
+    [')','\u0966'],['!','\u0967'],['@','\u0968'],['#','\u0969'],['$','\u096A'],
+    ['%','\u096B'],['^','\u096C'],['&','\u096D'],['*','\u096E'],['(','\u096F'],
+    [' .','\u0964'],[' ..','\u0965'],
+    ['\u2026','\u2018'],['\u00DA','\u2019'],
+  ];
+  var out=''; var i=0; var len=text.length;
+  while (i<len) {
+    var matched=false;
+    for (var pi=0; pi<P2C.length; pi++) {
+      var key=P2C[pi][0];
+      if (text.substr(i,key.length)===key) {
+        out+=P2C[pi][1]; i+=key.length; matched=true; break;
+      }
+    }
+    if (!matched) { out+=text[i]; i++; }
+  }
+  return out;
+}
+
+// ── Usage limits (shared key with UC tool per plan/day) ─────────────────────
+var PREETI_LIMITS = {
+  free:  { words: 300, minutes: 10 },
+  basic: { words: Infinity, minutes: 120 },
+  pro:   { words: Infinity, minutes: 300 }
+};
+var _prUsageKey = 'nc_preeti_usage';
+var _prTimer    = null;
+var _prOnline   = navigator.onLine;
+var _prFontSize = 15;
+
+function _prGetPlan() {
+  try { var u=JSON.parse(localStorage.getItem('nc_user')||'null'); return (u&&u.plan)?u.plan:'free'; } catch(e){return 'free';}
+}
+function _prGetUsage() {
+  var today=new Date().toISOString().slice(0,10);
+  try { var r=JSON.parse(localStorage.getItem(_prUsageKey)||'{}'); if(r.date!==today) return {date:today,words:0,seconds:0}; return r; } catch(e){return {date:today,words:0,seconds:0};}
+}
+function _prSaveUsage(u){ try{localStorage.setItem(_prUsageKey,JSON.stringify(u));}catch(e){} }
+function _prGetLimit(){ return PREETI_LIMITS[_prGetPlan()]||PREETI_LIMITS.free; }
+function _prAddWords(n){ var u=_prGetUsage(); u.words+=n; _prSaveUsage(u); _prUpdateBadge(); }
+
+function _prStartTimer() {
+  if (_prTimer) return;
+  _prTimer = setInterval(function() {
+    var u=_prGetUsage(); u.seconds++; _prSaveUsage(u); _prUpdateBadge();
+    var lim=_prGetLimit();
+    if (u.seconds >= lim.minutes*60) { _prBlockSession(); }
+  }, 1000);
+}
+function _prStopTimer() { if (_prTimer){clearInterval(_prTimer);_prTimer=null;} }
+
+function _prUpdateBadge() {
+  var badge = document.getElementById('preeti-mode-badge');
+  var limit = document.getElementById('preeti-limit-badge');
+  var text  = document.getElementById('preeti-limit-text');
+  if (_prOnline) {
+    if (badge) { badge.textContent='Mode: Online'; badge.style.background='#14532d'; badge.style.borderColor='#166534'; }
+    if (limit) limit.style.display='none';
+    return;
+  }
+  var lim=_prGetLimit(), u=_prGetUsage();
+  var remWords = lim.words===Infinity ? null : Math.max(0, lim.words-u.words);
+  var remSecs  = Math.max(0, lim.minutes*60 - u.seconds);
+  var remMins  = Math.ceil(remSecs/60);
+  if (badge) { badge.textContent='Mode: Offline'; badge.style.background='#1e293b'; badge.style.borderColor='#334155'; }
+  if (limit) {
+    limit.style.display='';
+    var isLow = (remWords!==null&&remWords<50)||remMins<3;
+    limit.classList.toggle('preeti-limit-blink', isLow);
+    if (text) text.textContent = remWords!==null
+      ? 'Remaining word='+remWords+' or Minutes='+remMins+' min'
+      : 'Remaining Minutes='+remMins+' min';
+    if ((remWords!==null&&remWords<=0)||remSecs<=0) _prBlockSession();
+  }
+}
+
+function _prBlockSession() {
+  _prStopTimer();
+  ['preeti-input','p2u-input'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.disabled=true;
+  });
+  var text=document.getElementById('preeti-limit-text');
+  if (text) text.textContent='Limit reached \u2014 Upgrade plan';
+  var limit=document.getElementById('preeti-limit-badge');
+  if (limit){limit.style.display='';limit.style.background='#fef2f2';limit.style.borderColor='#dc2626';limit.style.color='#dc2626';limit.classList.add('preeti-limit-blink');}
+  showToast('\u23f1 Daily limit reached. Upgrade your plan for more.', 4000);
+}
+
+function _prCheckOnline() {
+  _prOnline = navigator.onLine;
+  _prUpdateBadge();
+  if (!_prOnline) _prStartTimer(); else _prStopTimer();
+}
+
+function preetiToggleMode() { _prOnline=!_prOnline; _prUpdateBadge(); if(!_prOnline) _prStartTimer(); else _prStopTimer(); }
+
+window.addEventListener('online',  _prCheckOnline);
+window.addEventListener('offline', _prCheckOnline);
+
+// ── Toolbar helpers ───────────────────────────────────────────────────────────
+function preetiExec(cmd, val) {
+  // Apply to whichever output panel is focused/active
+  var target = _mode==='u2p'
+    ? document.getElementById('preeti-output')
+    : document.getElementById('p2u-output');
+  if (target) target.focus();
+  document.execCommand(cmd, false, val||null);
+}
+function preetiSetFont(f) {
+  ['preeti-output','p2u-output'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.style.fontFamily=f;
+  });
+}
+function preetiSetFontSize(pt) {
+  _prFontSize=parseInt(pt,10);
+  ['preeti-output','p2u-output','preeti-input','p2u-input'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.style.fontSize=_prFontSize+'px';
+  });
+}
+function preetiGrowFont() {
+  var s=[8,9,10,11,12,14,16,18,20,24,28,32]; var n=s.find(function(x){return x>_prFontSize;})||32;
+  _prFontSize=n; var sel=document.getElementById('preeti-size-sel'); if(sel) sel.value=n; preetiSetFontSize(n);
+}
+function preetiShrinkFont() {
+  var s=[8,9,10,11,12,14,16,18,20,24,28,32]; var n=8; s.forEach(function(x){if(x<_prFontSize)n=x;});
+  _prFontSize=n; var sel=document.getElementById('preeti-size-sel'); if(sel) sel.value=n; preetiSetFontSize(n);
+}
+
+// ── U2P functions ─────────────────────────────────────────────────────────────
+function convertToPreeti() {
+  var inp=document.getElementById('preeti-input');
+  var out=document.getElementById('preeti-output');
+  if (!inp||!out) return;
+  // Offline limit check
+  if (!_prOnline) {
+    var lim=_prGetLimit(), u=_prGetUsage();
+    if ((lim.words!==Infinity&&u.words>=lim.words)||u.seconds>=lim.minutes*60) { _prBlockSession(); return; }
+    var wordCount=(inp.value.trim()||'').split(/\s+/).filter(Boolean).length;
+    _prAddWords(wordCount);
+  }
+  var converted=unicodeToPreeti(inp.value);
+  out.innerText=converted;
+  var cc=document.getElementById('preeti-char-count');
+  if (cc) cc.textContent=converted.length+' characters';
+}
+
+function preetiClearInput() {
+  var inp=document.getElementById('preeti-input');
+  var out=document.getElementById('preeti-output');
+  if (inp) inp.value='';
+  if (out) out.innerText='';
+  var cc=document.getElementById('preeti-char-count');
+  if (cc) cc.textContent='0 characters';
+  showToast('\u2705 Cleared!');
+}
+function preetiClearAll() { preetiClearInput(); }
+
+function preetiCopyOutput() {
+  var out = _mode==='u2p'
+    ? document.getElementById('preeti-output')
+    : document.getElementById('p2u-output');
+  var text=out?(out.innerText||out.textContent||''):'';
+  if (!text.trim()) { showToast('\u26a0\ufe0f Nothing to copy'); return; }
+  var btn=document.getElementById('preeti-copy-btn');
+  navigator.clipboard.writeText(text).then(function() {
+    if (btn){var o=btn.textContent; btn.textContent='\u2713 Copied!'; setTimeout(function(){btn.textContent=o;},1800);}
+    showToast('\u2705 Copied to clipboard!');
+  }).catch(function() {
+    var ta=document.createElement('textarea'); ta.value=text;
+    ta.style.cssText='position:fixed;opacity:0'; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    showToast('\u2705 Copied!');
+  });
+}
+
+function preetiOutputChanged() {
+  var out=document.getElementById('preeti-output');
+  var cc=document.getElementById('preeti-char-count');
+  if (cc&&out) cc.textContent=(out.innerText||'').length+' characters';
+}
+
+function preetiPrint() {
+  var out = _mode==='u2p'
+    ? document.getElementById('preeti-output')
+    : document.getElementById('p2u-output');
+  if (!out) return;
+  var fontFamily = _mode==='u2p' ? 'Preeti,serif' : 'Mukta,sans-serif';
+  var w=window.open('','_blank');
+  var printHtml='<!DOCTYPE html><html><head><title>Preeti Converter<\/title>'
+    +'<link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600&display=swap" rel="stylesheet">'
+    +'<style>@font-face{font-family:Preeti;src:url(https:\/\/cdn.jsdelivr.net\/gh\/mhnpd\/nepali-font@master\/fonts\/Preeti.TTF) format("truetype");}'
+    +'body{font-family:'+fontFamily+';font-size:16px;line-height:1.85;padding:40px 60px;max-width:760px;margin:0 auto;}<\/style>'
+    +'<\/head><body>'+out.innerHTML+'<\/body><\/html>';
+  w.document.write(printHtml); w.document.close(); w.focus(); w.print(); w.close();
+}
+
+function preetiDownloadDocx() {
+  var out = _mode==='u2p'
+    ? document.getElementById('preeti-output')
+    : document.getElementById('p2u-output');
+  if (!out) return;
+  var fontFamily = _mode==='u2p' ? 'Preeti,serif' : 'Mukta,sans-serif';
+  var docHtml='<!DOCTYPE html><html><head><meta charset="UTF-8">'
+    +'<link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600&display=swap" rel="stylesheet">'
+    +'<style>@font-face{font-family:Preeti;src:url(https:\/\/cdn.jsdelivr.net\/gh\/mhnpd\/nepali-font@master\/fonts\/Preeti.TTF) format("truetype");}'
+    +'body{font-family:'+fontFamily+';font-size:16px;line-height:1.85;padding:50px 70px;max-width:800px;margin:0 auto;color:#111;}<\/style>'
+    +'<\/head><body>'+out.innerHTML+'<\/body><\/html>';
+  var blob=new Blob(['\uFEFF'+docHtml],{type:'application/msword'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url; a.download='preeti-document.doc';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('\u2705 Document downloaded!');
+}
+
+// ── P2U functions ─────────────────────────────────────────────────────────────
+function p2uConvert() {
+  var inp=document.getElementById('p2u-input');
+  var out=document.getElementById('p2u-output');
+  if (!inp||!out) return;
+  if (!_prOnline) {
+    var lim=_prGetLimit(), u=_prGetUsage();
+    if ((lim.words!==Infinity&&u.words>=lim.words)||u.seconds>=lim.minutes*60) { _prBlockSession(); return; }
+    var wordCount=(inp.value.trim()||'').split(/\s+/).filter(Boolean).length;
+    _prAddWords(wordCount);
+  }
+  var converted=preetiToUnicode(inp.value);
+  out.innerText=converted;
+  var cc=document.getElementById('p2u-char-count');
+  if (cc) cc.textContent=converted.length+' characters';
+}
+
+function p2uClearInput() {
+  var inp=document.getElementById('p2u-input');
+  var out=document.getElementById('p2u-output');
+  if (inp) inp.value='';
+  if (out) out.innerText='';
+  var cc=document.getElementById('p2u-char-count');
+  if (cc) cc.textContent='0 characters';
+  showToast('\u2705 Cleared!');
+}
+function p2uClearAll() { p2uClearInput(); }
+
+function p2uCopyOutput() {
+  var out=document.getElementById('p2u-output');
+  var text=out?(out.innerText||out.textContent||''):'';
+  if (!text.trim()) { showToast('\u26a0\ufe0f Nothing to copy'); return; }
+  var btn=document.getElementById('p2u-copy-btn');
+  navigator.clipboard.writeText(text).then(function() {
+    if (btn){var o=btn.textContent; btn.textContent='\u2713 Copied!'; setTimeout(function(){btn.textContent=o;},1800);}
+    showToast('\u2705 Copied to clipboard!');
+  }).catch(function() {
+    var ta=document.createElement('textarea'); ta.value=text;
+    ta.style.cssText='position:fixed;opacity:0'; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    showToast('\u2705 Copied!');
+  });
+}
+
+// ── Tab switching (updated to style new buttons) ──────────────────────────────
+function preetiSetMode(mode) {
+  _mode = mode;
+  var tu=document.getElementById('ptab-u2p');
+  var tp=document.getElementById('ptab-p2u');
+  var su=document.getElementById('preeti-u2p-section');
+  var sp=document.getElementById('preeti-p2u-section');
+  var sb=document.getElementById('preeti-subtitle');
+  if (mode==='u2p') {
+    if (tu){tu.style.background='#111';tu.style.color='#fff';}
+    if (tp){tp.style.background='#fff';tp.style.color='#111';}
+    if (su) su.style.display=''; if (sp) sp.style.display='none';
+    if (sb) sb.textContent='Convert Devanagari Unicode text to Preeti font encoding \u2014 edit output to correct any errors before copying';
+  } else {
+    if (tp){tp.style.background='#111';tp.style.color='#fff';}
+    if (tu){tu.style.background='#fff';tu.style.color='#111';}
+    if (sp) sp.style.display=''; if (su) su.style.display='none';
+    if (sb) sb.textContent='Paste Preeti-encoded text on the left to convert it back to Devanagari Unicode';
+  }
+}
+
+// ── Drag resize ───────────────────────────────────────────────────────────────
+function _initResize(handleId, wrapId) {
+  var handle=document.getElementById(handleId);
+  var wrap=document.getElementById(wrapId);
+  if (!handle||!wrap) return;
+  var startY, startH;
+  function doStart(y){startY=y;startH=wrap.offsetHeight;document.body.style.userSelect='none';}
+  function doMove(y){var h=Math.max(140,startH+(y-startY));wrap.style.height=h+'px';var inner=wrap.querySelector('textarea,.preeti-output,.p2u-output,.p2u-input');if(inner){inner.style.height=h+'px';inner.style.minHeight=h+'px';}}
+  function doEnd(){document.removeEventListener('mousemove',onMM);document.removeEventListener('mouseup',onMU);document.body.style.userSelect='';}
+  function onMM(e){doMove(e.clientY);}
+  function onMU(){doEnd();}
+  handle.addEventListener('mousedown',function(e){e.preventDefault();doStart(e.clientY);document.addEventListener('mousemove',onMM);document.addEventListener('mouseup',onMU);},{passive:false});
+}
+
+(function(){
+  function initAll(){
+    _initResize('preeti-left-resize','preeti-left-wrap');
+    _initResize('preeti-right-resize','preeti-right-wrap');
+    _initResize('p2u-left-resize','p2u-left-wrap');
+    _initResize('p2u-right-resize','p2u-right-wrap');
+    _prCheckOnline();
+  }
+  if (document.readyState==='loading'){document.addEventListener('DOMContentLoaded',initAll);}else{initAll();}
+})();
+
+window.preetiSetMode       = preetiSetMode;
+window.convertToPreeti     = convertToPreeti;
+window.unicodeToPreeti     = unicodeToPreeti;
+window.preetiClearInput    = preetiClearInput;
+window.preetiClearAll      = preetiClearAll;
+window.preetiCopyOutput    = preetiCopyOutput;
+window.preetiOutputChanged = preetiOutputChanged;
+window.preetiPrint         = preetiPrint;
+window.preetiDownloadDocx  = preetiDownloadDocx;
+window.preetiExec          = preetiExec;
+window.preetiSetFont       = preetiSetFont;
+window.preetiSetFontSize   = preetiSetFontSize;
+window.preetiGrowFont      = preetiGrowFont;
+window.preetiShrinkFont    = preetiShrinkFont;
+window.preetiToggleMode    = preetiToggleMode;
+window.p2uConvert          = p2uConvert;
+window.p2uClearInput       = p2uClearInput;
+window.p2uClearAll         = p2uClearAll;
+window.p2uCopyOutput       = p2uCopyOutput;
+window.preetiToUnicode     = preetiToUnicode;
+
+})();
 // ===================== EMI CALCULATOR =====================
 function calculateEMI() {
   const amountOk = validatePositive(document.getElementById('emi-amount'));
@@ -9991,68 +11464,428 @@ function flDownloadFont(idx) {
 document.addEventListener('DOMContentLoaded', function(){ if(document.getElementById('fl-grid')) flRender(); });
 
 // ===================== NEPALI WRITER =====================
-function wpExec(cmd, val) {
+(function(){
+'use strict';
+
+var _lang='nepali', _typing='', _suggIdx=-1, _lastConv=null;
+var _saveTimer=null, _micRecog=null, _micOn=false;
+var _hlColor='#fef08a', _tcColor='#dc2626', _fontSize=16;
+var SKEY='npWriter_v2';
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+function wpInit(){
+  var ed=document.getElementById('wp-editor');
+  if(!ed) return;
+  try{ var s=JSON.parse(localStorage.getItem(SKEY)||'null'); if(s&&s.html) ed.innerHTML=s.html; }catch(e){}
+  wpCount(); wpPlaceholder(); wpSetLang('nepali');
+}
+
+// ── Language ──────────────────────────────────────────────────────────────────
+function wpSetLang(lang){
+  _lang=lang; _typing=''; _suggIdx=-1; wpHideSugg();
+  var nb=document.getElementById('wp-lang-np');
+  var eb=document.getElementById('wp-lang-en');
+  if(lang==='nepali'){
+    if(nb){nb.style.background='#111';nb.style.color='#fff';}
+    if(eb){eb.style.background='#fff';eb.style.color='#111';}
+  } else {
+    if(eb){eb.style.background='#111';eb.style.color='#fff';}
+    if(nb){nb.style.background='#fff';nb.style.color='#111';}
+  }
+}
+
+// ── Input ─────────────────────────────────────────────────────────────────────
+function wpOnInput(e){
+  wpCount(); wpAutoSave(); wpPlaceholder();
+  if(_lang!=='nepali') return;
+  var sel=window.getSelection();
+  if(!sel||!sel.rangeCount) return;
+  var range=sel.getRangeAt(0);
+  var node=range.startContainer;
+  if(node.nodeType!==3) return;
+  var pos=range.startOffset;
+  var before=node.textContent.slice(0,pos);
+  var m=before.match(/([a-zA-Z]+)$/);
+  var word=m?m[1]:'';
+  if(word!==_typing){
+    _typing=word; _suggIdx=-1;
+    if(word.length>=2&&window.getSuggestions) wpShowSugg(word);
+    else wpHideSugg();
+  }
+}
+
+// ── Keydown ───────────────────────────────────────────────────────────────────
+function wpOnKeyDown(e){
+  var box=document.getElementById('wp-sugg-box');
+  var boxOpen=box&&box.style.display!=='none';
+
+  if(e.key==='Tab'){
+    e.preventDefault();
+    document.execCommand('insertText',false,'\u00a0\u00a0\u00a0\u00a0');
+    return;
+  }
+
+  if(_lang==='nepali'){
+    if((e.key===' '||e.key==='Enter')&&_typing){
+      e.preventDefault();
+      var suggs=window.getSuggestions?window.getSuggestions(_typing,6):[];
+      var pick=suggs[_suggIdx>=0?_suggIdx:0];
+      var nepali=pick?pick.nepali:(window.romanToUnicode?window.romanToUnicode(_typing):_typing);
+      wpReplaceWord(_typing,nepali);
+      _lastConv={roman:_typing,nepali:nepali};
+      _typing=''; wpHideSugg();
+      if(e.key===' ') document.execCommand('insertText',false,' ');
+      else document.execCommand('insertParagraph',false);
+      wpCount(); wpAutoSave(); wpPlaceholder();
+      return;
+    }
+    if(boxOpen&&(e.key==='ArrowDown'||e.key==='ArrowUp')){
+      e.preventDefault();
+      var items=box.querySelectorAll('.wp-sugg-item');
+      if(!items.length) return;
+      _suggIdx=e.key==='ArrowDown'?Math.min(_suggIdx+1,items.length-1):Math.max(_suggIdx-1,0);
+      items.forEach(function(it,i){it.classList.toggle('wp-si-active',i===_suggIdx);});
+      return;
+    }
+    if(e.key==='Escape'){wpHideSugg();_typing='';return;}
+    if(e.key==='Backspace'&&_lastConv){
+      var sel2=window.getSelection();
+      if(sel2&&sel2.rangeCount){
+        var rng=sel2.getRangeAt(0);
+        var nd=rng.startContainer;
+        if(nd.nodeType===3){
+          var txt=nd.textContent;
+          var p=rng.startOffset;
+          var np=_lastConv.nepali;
+          var hasSp=txt.slice(0,p).endsWith(np+' ');
+          var hasNp=txt.slice(0,p).endsWith(np);
+          if(hasSp||hasNp){
+            e.preventDefault();
+            var del=np.length+(hasSp?1:0);
+            rng.setStart(nd,p-del); rng.setEnd(nd,p);
+            sel2.removeAllRanges(); sel2.addRange(rng);
+            document.execCommand('insertText',false,_lastConv.roman);
+            _typing=_lastConv.roman; _lastConv=null;
+            if(window.getSuggestions) wpShowSugg(_typing);
+            return;
+          }
+        }
+      }
+      _lastConv=null;
+    }
+  }
+}
+
+// ── Replace word ──────────────────────────────────────────────────────────────
+function wpReplaceWord(roman,nepali){
+  var sel=window.getSelection();
+  if(!sel||!sel.rangeCount) return;
+  var range=sel.getRangeAt(0);
+  var node=range.startContainer;
+  if(node.nodeType!==3) return;
+  var txt=node.textContent;
+  var pos=range.startOffset;
+  var idx=txt.slice(0,pos).lastIndexOf(roman);
+  if(idx<0) return;
+  range.setStart(node,idx); range.setEnd(node,idx+roman.length);
+  sel.removeAllRanges(); sel.addRange(range);
+  document.execCommand('insertText',false,nepali);
+}
+
+// ── Suggestions ───────────────────────────────────────────────────────────────
+function wpShowSugg(word){
+  if(!window.getSuggestions) return;
+  var suggs=window.getSuggestions(word,6);
+  var box=document.getElementById('wp-sugg-box');
+  var ed=document.getElementById('wp-editor');
+  if(!box||!ed||!suggs.length){wpHideSugg();return;}
+  var sel=window.getSelection();
+  if(sel&&sel.rangeCount){
+    var rect=sel.getRangeAt(0).getBoundingClientRect();
+    var edRect=ed.getBoundingClientRect();
+    if(rect.top){
+      box.style.left=Math.max(0,rect.left-edRect.left)+'px';
+      box.style.top=(rect.bottom-edRect.top+2)+'px';
+    }
+  }
+  _suggIdx=-1;
+  var h='<div style="padding:5px 14px 3px;background:#f8f9fa;display:flex;justify-content:space-between;border-bottom:1px solid #f3f4f6;">'
+      +'<span style="font-size:11px;color:#6b7280;">Suggestions</span>'
+      +'<span style="font-size:10px;color:#9ca3af;">ESC to close</span></div>';
+  suggs.forEach(function(s,i){
+    var badge=i===0
+      ?'<span style="margin-left:auto;background:#e0e7ff;color:#4338ca;border-radius:4px;padding:1px 7px;font-size:10px;font-weight:700;">Space</span>'
+      :'<span style="margin-left:auto;color:#d1d5db;font-size:11px;">'+(i+1)+'</span>';
+    h+='<div class="wp-sugg-item'+(i===0?' wp-si-active':'')+'" onmousedown="event.preventDefault();wpPickSugg('+i+',\''+word+'\')" style="display:flex;align-items:center;gap:8px;padding:7px 14px;cursor:pointer;border-bottom:1px solid #f9fafb;">'
+      +'<span style="color:#9ca3af;font-size:12px;min-width:14px;">'+(i+1)+'.</span>'
+      +'<span style="font-family:Mukta,sans-serif;font-size:15px;">'+s.nepali+'</span>'
+      +badge+'</div>';
+  });
+  box.innerHTML=h;
+  box.style.display='block';
+}
+
+function wpHideSugg(){
+  var box=document.getElementById('wp-sugg-box');
+  if(box) box.style.display='none';
+  _suggIdx=-1;
+}
+
+function wpPickSugg(idx,typed){
+  var word=typed||_typing;
+  var suggs=window.getSuggestions?window.getSuggestions(word,6):[];
+  if(!suggs[idx]) return;
+  var nepali=suggs[idx].nepali;
+  wpReplaceWord(word,nepali);
+  _lastConv={roman:word,nepali:nepali};
+  _typing=''; wpHideSugg();
+  document.execCommand('insertText',false,' ');
+  wpCount(); wpAutoSave(); wpPlaceholder();
+}
+
+// ── Toolbar ───────────────────────────────────────────────────────────────────
+function wpExec(cmd,val){
+  var ed=document.getElementById('wp-editor');
+  if(ed) ed.focus();
+  document.execCommand(cmd,false,val||null);
+  wpCount(); wpToolbarSync();
+}
+
+function wpFont(f){
+  if(!f) return;
+  var ed=document.getElementById('wp-editor');
+  if(!ed) return;
+  ed.focus(); ed.style.fontFamily=f;
+  document.execCommand('fontName',false,f);
+}
+
+function wpApplyFontSize(pt){
+  _fontSize=parseInt(pt,10);
+  var ed=document.getElementById('wp-editor');
+  if(ed) ed.style.fontSize=_fontSize+'px';
+}
+
+function wpGrowFont(){
+  var s=[8,9,10,11,12,14,16,18,20,22,24,28,32,36,48,72];
+  var n=s.find(function(x){return x>_fontSize;})||72;
+  _fontSize=n;
+  var sel=document.getElementById('wp-size-sel');
+  if(sel) sel.value=n;
+  wpApplyFontSize(n);
+}
+
+function wpShrinkFont(){
+  var s=[8,9,10,11,12,14,16,18,20,22,24,28,32,36,48,72];
+  var n=8;
+  s.forEach(function(x){if(x<_fontSize) n=x;});
+  _fontSize=n;
+  var sel=document.getElementById('wp-size-sel');
+  if(sel) sel.value=n;
+  wpApplyFontSize(n);
+}
+
+function wpHighlight(){
   document.getElementById('wp-editor').focus();
-  document.execCommand(cmd, false, val || null);
-  wpCount();
+  document.execCommand('hiliteColor',false,_hlColor);
+  wpToolbarSync();
 }
-function wpFont(f) {
-  if (!f) return;
+
+function wpShowHlPicker(e){
+  e.stopPropagation();
+  var p=document.getElementById('wp-hl-picker');
+  if(p) p.style.display=p.style.display==='flex'?'none':'flex';
+}
+
+function wpSetHl(color){
+  _hlColor=color||'transparent';
   document.getElementById('wp-editor').focus();
-  document.execCommand('fontName', false, f);
+  document.execCommand('hiliteColor',false,_hlColor);
+  var p=document.getElementById('wp-hl-picker');
+  if(p) p.style.display='none';
+  wpToolbarSync();
 }
-function wpCount() {
-  var el = document.getElementById('wp-editor');
-  var el2 = document.getElementById('wp-wordcount');
-  if (!el || !el2) return;
-  var text = el.innerText || '';
-  var words = text.trim() ? text.trim().split(/\s+/).length : 0;
-  var chars = text.length;
-  el2.textContent = words + ' words · ' + chars + ' chars';
+
+function wpApplyTextColor(){
+  document.getElementById('wp-editor').focus();
+  document.execCommand('foreColor',false,_tcColor);
+  wpToolbarSync();
 }
-function wpCopy() {
-  var el = document.getElementById('wp-editor');
-  if (!el) return;
-  var range = document.createRange();
-  range.selectNodeContents(el);
-  var sel = window.getSelection();
-  sel.removeAllRanges();
-  sel.addRange(range);
+
+function wpShowTcPicker(e){
+  e.stopPropagation();
+  var p=document.getElementById('wp-tc-picker');
+  if(p) p.style.display=p.style.display==='flex'?'none':'flex';
+}
+
+function wpSetTc(color){
+  _tcColor=color;
+  var bar=document.getElementById('wp-tc-bar');
+  if(bar) bar.style.background=color;
+  document.getElementById('wp-editor').focus();
+  document.execCommand('foreColor',false,color);
+  var p=document.getElementById('wp-tc-picker');
+  if(p) p.style.display='none';
+  wpToolbarSync();
+}
+
+function wpToolbarSync(){
+  [['wp-btn-bold','bold'],['wp-btn-italic','italic'],['wp-btn-underline','underline']].forEach(function(pair){
+    var btn=document.getElementById(pair[0]);
+    if(btn) btn.classList.toggle('wp-active',!!document.queryCommandState(pair[1]));
+  });
+}
+
+// ── Count & placeholder ───────────────────────────────────────────────────────
+function wpCount(){
+  var ed=document.getElementById('wp-editor');
+  var el2=document.getElementById('wp-wordcount');
+  if(!ed||!el2) return;
+  var text=ed.innerText||'';
+  var words=text.trim()?text.trim().split(/\s+/).filter(Boolean).length:0;
+  var chars=text.replace(/\s/g,'').length;
+  el2.textContent=words+' words \u00b7 '+chars+' chars';
+}
+
+function wpPlaceholder(){
+  var ed=document.getElementById('wp-editor');
+  var ph=document.getElementById('wp-placeholder');
+  if(!ed||!ph) return;
+  ph.style.display=(ed.innerText||'').trim()?'none':'block';
+}
+
+// ── Autosave ──────────────────────────────────────────────────────────────────
+function wpAutoSave(){
+  if(_saveTimer) clearTimeout(_saveTimer);
+  _saveTimer=setTimeout(function(){
+    var ed=document.getElementById('wp-editor');
+    var ind=document.getElementById('wp-autosave');
+    if(!ed) return;
+    try{
+      localStorage.setItem(SKEY,JSON.stringify({html:ed.innerHTML,ts:Date.now()}));
+      if(ind){ind.textContent='Autosaved \u2713';setTimeout(function(){if(ind)ind.textContent='';},2000);}
+    }catch(e){}
+  },1200);
+}
+
+// ── Voice input ───────────────────────────────────────────────────────────────
+function wpToggleMic(){
+  var btn=document.getElementById('wp-mic-btn');
+  if(_micOn){
+    if(_micRecog) _micRecog.stop();
+    _micOn=false;
+    if(btn){btn.style.background='#dc2626';btn.style.animation='';}
+    return;
+  }
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){showToast('\u26a0\ufe0f Voice input not supported');return;}
+  _micRecog=new SR();
+  _micRecog.lang=_lang==='nepali'?'ne-NP':'en-US';
+  _micRecog.continuous=true;
+  _micRecog.interimResults=false;
+  _micRecog.onresult=function(ev){
+    var t=ev.results[ev.results.length-1][0].transcript;
+    var ed=document.getElementById('wp-editor');
+    if(ed){ed.focus();document.execCommand('insertText',false,t+' ');wpCount();wpAutoSave();wpPlaceholder();}
+  };
+  _micRecog.onerror=function(){_micOn=false;if(btn){btn.style.background='#dc2626';btn.style.animation='';}};
+  _micRecog.onend=function(){if(_micOn) _micRecog.start();};
+  _micRecog.start();
+  _micOn=true;
+  if(btn){btn.style.background='#16a34a';btn.style.animation='wp-mic-pulse 1s infinite';}
+}
+
+// ── Download .doc ─────────────────────────────────────────────────────────────
+function wpDownloadDocx(){
+  var ed=document.getElementById('wp-editor');
+  if(!ed) return;
+  var docHtml='<!DOCTYPE html><html><head><meta charset="UTF-8">'
+    +'<link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600&display=swap" rel="stylesheet">'
+    +'<style>body{font-family:Mukta,sans-serif;font-size:16px;line-height:1.85;padding:50px 70px;max-width:800px;margin:0 auto;color:#111;}<\/style>'
+    +'<\/head><body>'+ed.innerHTML+'<\/body><\/html>';
+  var blob=new Blob(['\uFEFF'+docHtml],{type:'application/msword'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url; a.download='nepali-document.doc';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('\u2705 Document downloaded!');
+}
+
+// ── Copy ──────────────────────────────────────────────────────────────────────
+function wpCopy(){
+  var ed=document.getElementById('wp-editor');
+  if(!ed) return;
+  var rng=document.createRange();
+  rng.selectNodeContents(ed);
+  var sel=window.getSelection();
+  sel.removeAllRanges(); sel.addRange(rng);
   document.execCommand('copy');
   sel.removeAllRanges();
-  showToast('Copied to clipboard!');
+  showToast('\u2705 Copied to clipboard!');
 }
-function wpDownload() {
-  var el = document.getElementById('wp-editor');
-  if (!el) return;
-  var text = el.innerText || '';
-  var a = document.createElement('a');
-  a.download = 'nepali-document.txt';
-  a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(text);
-  a.click();
+
+// ── Print ─────────────────────────────────────────────────────────────────────
+function wpPrint(){
+  var ed=document.getElementById('wp-editor');
+  if(!ed) return;
+  var w=window.open('','_blank');
+  var printHtml='<!DOCTYPE html><html><head><title>Nepali Writer<\/title>'
+    +'<link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600&display=swap" rel="stylesheet">'
+    +'<style>body{font-family:Mukta,sans-serif;font-size:16px;line-height:1.85;padding:40px 60px;max-width:760px;margin:0 auto;}<\/style>'
+    +'<\/head><body>'+ed.innerHTML+'<\/body><\/html>';
+  w.document.write(printHtml);
+  w.document.close(); w.focus(); w.print(); w.close();
 }
-function wpPrint() {
-  var el = document.getElementById('wp-editor');
-  if (!el) return;
-  var w = window.open('', '_blank');
-  w.document.write('<html><head><title>Nepali Writer</title><link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600&display=swap" rel="stylesheet"></head><body style="font-family:Fraunces,serif;font-size:17px;line-height:1.9;padding:40px;max-width:800px;margin:auto;">' + el.innerHTML + '</body></html>');
-  w.document.close();
-  w.focus();
-  w.print();
-  w.close();
+
+// ── Clear ─────────────────────────────────────────────────────────────────────
+function wpClear(){
+  if(!confirm('Clear all content?')) return;
+  var ed=document.getElementById('wp-editor');
+  if(ed){ed.innerHTML='';wpCount();wpPlaceholder();}
+  try{localStorage.removeItem(SKEY);}catch(e){}
+  showToast('\u2705 Cleared!');
 }
-function wpClear() {
-  if (confirm('Clear all content?')) {
-    var el = document.getElementById('wp-editor');
-    if (el) { el.innerHTML = ''; wpCount(); }
+
+// ── Outside click: close dropdowns & suggestions ──────────────────────────────
+document.addEventListener('click',function(ev){
+  if(!ev.target.closest('#wp-sugg-box')&&!ev.target.closest('#wp-editor')) wpHideSugg();
+  if(!ev.target.closest('#wp-hl-picker')&&!ev.target.closest('.wp-hl-trigger')){
+    var p=document.getElementById('wp-hl-picker'); if(p) p.style.display='none';
   }
-}
-function wpTab(e) {
-  if (e.key === 'Tab') {
-    e.preventDefault();
-    document.execCommand('insertText', false, '\u00a0\u00a0\u00a0\u00a0');
+  if(!ev.target.closest('#wp-tc-picker')&&!ev.target.closest('.wp-tc-trigger')){
+    var p=document.getElementById('wp-tc-picker'); if(p) p.style.display='none';
   }
-}
+});
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',wpInit);
+else wpInit();
+
+// ── Exports ───────────────────────────────────────────────────────────────────
+window.wpExec          = wpExec;
+window.wpFont          = wpFont;
+window.wpApplyFontSize = wpApplyFontSize;
+window.wpGrowFont      = wpGrowFont;
+window.wpShrinkFont    = wpShrinkFont;
+window.wpHighlight     = wpHighlight;
+window.wpShowHlPicker  = wpShowHlPicker;
+window.wpSetHl         = wpSetHl;
+window.wpApplyTextColor= wpApplyTextColor;
+window.wpShowTcPicker  = wpShowTcPicker;
+window.wpSetTc         = wpSetTc;
+window.wpCopy          = wpCopy;
+window.wpDownloadDocx  = wpDownloadDocx;
+window.wpPrint         = wpPrint;
+window.wpClear         = wpClear;
+window.wpCount         = wpCount;
+window.wpSetLang       = wpSetLang;
+window.wpToggleMic     = wpToggleMic;
+window.wpOnInput       = wpOnInput;
+window.wpOnKeyDown     = wpOnKeyDown;
+window.wpToolbarSync   = wpToolbarSync;
+window.wpPickSugg      = wpPickSugg;
+
+})();
 
 </script>
 
